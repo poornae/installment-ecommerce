@@ -74,7 +74,7 @@ a.btn {
   justify-content: space-between;
 }
 .navbar-logo {
-  height: 70px;
+  height: 60px;
   justify-self: center;
   margin-left: -20px;
   margin-top: 0px;
@@ -216,7 +216,7 @@ section > .btn {
   content: "";
   left: 0;
   position: absolute;
-  width: 60px;
+  width: 130px;
 }
 .features {
   display: flex;
