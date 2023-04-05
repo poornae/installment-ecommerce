@@ -3,11 +3,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to c
 Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
 */
 /* 
-    Created on : Apr 4, 2023, 11:00:34 PM
+    Created on : Apr 4, 2023, 10:59:44 PM
     Author     : poornae
 */
 
-@import "manage-customers.css";
+@import "admin-view.css";
 
 * {
   margin: 0;
@@ -75,7 +75,7 @@ a {
   height: 300px;
 }
 .modal-toggle {
-  background: rgba(50, 41, 47, 0.76);
+  /*background: rgba(50, 41, 47, 0.76);*/
   position: fixed;
   top: 0;
   left: 0;
