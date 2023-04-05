@@ -3,7 +3,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to c
 Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
 */
 /* 
-    Created on : Apr 4, 2023, 10:36:46 PM
+    Created on : Apr 5, 2023, 6:55:21 AM
     Author     : poornae
 */
 
@@ -18,7 +18,7 @@ body {
   font-family: 'Nunito', sans-serif;
   font-size: 16px;
   line-height: 1.4;
-  min-height: 100vh;
+  min-height: 80vh;
 }
 h1 {
   font-family: 'Carter One', cursive;
@@ -69,7 +69,7 @@ header {
   margin-top: 1rem;
 }
 .logo {
-  max-width: 100%; 
+  width: 140px; /* Set your desired width here */
   height: 85px;
   margin-left: auto;
   margin-right: auto;
@@ -260,26 +260,5 @@ section > p a:hover {
 
   .container {
     width: 100%;
-  }
-}
-
-/* logo for screens up to 768px wide */
-@media screen and (max-width: 768px) {
-  .logo {
-    width: 180px;
-  }
-}
-
-/* logo for screens between 768px and 1200px wide */
-@media screen and (min-width: 769px) and (max-width: 1200px) {
-  .logo {
-    width: 180px;
-  }
-}
-
-/* logo for screens larger than 1200px wide */
-@media screen and (min-width: 1201px) {
-  .logo {
-    width: 200px;
   }
 }
