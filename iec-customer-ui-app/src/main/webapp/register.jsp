@@ -1,5 +1,5 @@
 <%-- 
-    Document   : signup
+    Document   : register
     Created on : Apr 5, 2023, 1:24:38 PM
     Author     : poornae
 --%>
@@ -16,7 +16,7 @@
   
   <link rel="shortcut icon" type="x-icon" href="assets/img/logo2.svg">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-  <link rel="stylesheet" href="assets/css/signup.css">
+  <link rel="stylesheet" href="assets/css/register.css">
 </head>
 <body>
   <header>

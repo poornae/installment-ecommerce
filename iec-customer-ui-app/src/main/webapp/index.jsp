@@ -33,7 +33,7 @@
       <button class="hamburger-menu"><a class="hamburger"></a></button>
       <ul class="navbar-menu">
         <li class="navbar-link">
-          <a href="signup.jsp" class="btn-transparent" id="signup">SIGN UP</a>
+          <a href="register.jsp" class="btn-transparent" id="signup">REGISTER</a>
         </li>
       </ul>
     </nav>
@@ -47,7 +47,7 @@
       </p>
 
       <div class="hero-callout">
-        <a href="signup.jsp" class="btn btn-home" id="hero-text">
+        <a href="register.jsp" class="btn btn-home" id="hero-text">
           <span>Get Started </span>
         </a>
       </div><br>

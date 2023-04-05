@@ -127,6 +127,12 @@ a {
   display: none;
 }
 
+.fa-solid {
+  color: #F06543;
+  font-size: 1.3rem;
+  margin-right: 0.8rem;
+}
+
 
 /*** ** --- Media Queries --- ** ***/
 @media screen and (max-width: 768px) {

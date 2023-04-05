@@ -167,6 +167,12 @@ header nav a:hover {
   color: #0A122A;
 }
 
+.fa-solid {
+  color: #F06543;
+  font-size: 1.3rem;
+  margin-right: 0.8rem;
+}
+
 /** *** Main Styles *** **/
 
 main {

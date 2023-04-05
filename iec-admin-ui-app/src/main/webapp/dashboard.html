@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Bumble Bee &ndash; Product Brands</title>
+
+  <script src="https://kit.fontawesome.com/809f681f36.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="assets/css/manage-brands.css"/>
+  
+  <!--<script src="assets/js/utils/utils.js"></script>-->
+<!--  <script>if (!isAuth()) window.location = 'login.jsp';</script>-->
+</head>
+<body>
+  <aside>
+    <div class="modal-toggle"></div>
+    <button class="hamburger-menu"><a class="hamburger"></a></button>
+    <div class="asidebar-logo">
+      <a href="./">
+        <img src="assets/img/logo.png" alt="logo" class="logo">
+      </a>
+    </div><br><br><br><br><br>
+    <nav class="navbar-menu">
+      <a href="dashboard.html">
+        <i class="fa-solid fa-chart-pie"></i>Dashboard
+      </a>
+      <a href="manage-customers.html" class="active">
+        <i class="fa-solid fa-users"></i>Manage Customers
+      </a>
+      <a href="manage-orders.html">
+        <i class="fa-solid fa-cart-shopping"></i>Manage Orders
+      </a>
+      <a href="manage-transactions.html">
+        <i class="fa-solid fa-money-check"></i>Manage Transactions
+      </a>
+      <a href="manage-loans.html">
+        <i class="fa-solid fa-sack-dollar"></i>Manage Loans
+      </a>
+      <a href="manage-products.html">
+        <i class="fa-solid fa-basket-shopping"></i>Manage Products
+      </a>
+      <a href="manage-categories.html">
+        <i class="fa-solid fa-store"></i>Manage Product Categories
+      </a>
+      <a href="manage-brands.html">
+        <i class="fa-solid fa-copyright"></i>Manage Product Brands
+      </a>
+      <a href="manage-inventory.html">
+        <i class="fa-solid fa-warehouse"></i>Manage Product Inventory
+      </a>
+      <a href="manage-users.html">
+       <i class="fa-solid fa-users-gear"></i>Manage System Users
+      </a>
+      <a href="system-settings.html">
+        <i class="fa-solid fa-gears"></i>System Settings
+      </a>
+    </nav>
+  </aside>
+
+  <header>
+    <nav>
+      <a href="#"><i class="fas fa-bell"></i></a>
+      <a href="signin.html" id="signout"><i class="fas fa-sign-out-alt"></i></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="container">
+      <h2 class="section-title">Displaying Users</h2>
+      <div class="responsive-table">
+        <table id="user-table">
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Home Address</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody id="user-list"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+<!--<script src="assets/js/script.js"></script>-->
+<!--<script src="assets/js/getUsers.js"></script>-->
+</html>
