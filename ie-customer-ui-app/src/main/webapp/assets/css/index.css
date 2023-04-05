@@ -137,18 +137,18 @@ a.btn {
   flex-direction: column;
   height: calc(90vh - 74px);
   justify-content: center;
-  padding: 30px 80px;
+  padding: 40px 80px;
 }
 .hero-title {
   font-family: 'Averia Libre', cursive;
   font-size: 2.3em;
   letter-spacing: 0.3rem;
-  margin-bottom:30px;
+  margin-bottom: 30px;
   text-transform: uppercase;
 }
 .hero-paragraph {
   font-size: 1.3em;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
   text-align: center;
   width: 45vw;
 }
@@ -160,6 +160,8 @@ a.btn {
   color: #fffffa;
   font-size: 2rem;
   position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .btn-home {
   background: #1d3461;

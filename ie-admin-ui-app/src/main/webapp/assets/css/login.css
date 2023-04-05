@@ -69,10 +69,11 @@ header {
   margin-top: 1rem;
 }
 .logo {
-  width: 140px; /* Set your desired width here */
-  height: 85px;
-  margin-left: auto;
-  margin-right: auto;
+  width: 90px; 
+  height: 90px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /** Main Styles **/
@@ -260,5 +261,45 @@ section > p a:hover {
 
   .container {
     width: 100%;
+  }
+}
+
+/* logo for screens up to 768px wide */
+@media screen and (max-width: 768px) {
+  .logo {
+    width: 150px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* logo for screens between 768px and 1200px wide */
+@media screen and (min-width: 769px) and (max-width: 1200px) {
+  .logo {
+    width: 150px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* logo for screens between 200px and 769px wide */
+@media screen and (min-width: 200px) and (max-width: 769px) {
+  .logo {
+    width: 150px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* logo for screens larger than 1200px wide */
+@media screen and (min-width: 1201px) {
+  .logo {
+    width: 150px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
