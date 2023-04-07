@@ -3,3 +3,7 @@
 /ie-admin-ui-app/target/
 /iec-customer-ui-app/target/
 /iec-admin-ui-app/target/
+/testonly/target/
+/iec-rest-service/target/
+/iec-soap-client/target/
+/JavaApplication1/nbproject/private/
