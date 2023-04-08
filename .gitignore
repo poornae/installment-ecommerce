@@ -13,3 +13,5 @@
 /bin/
 /iec-rest-service/bin/target/
 /iec-soap-client/bin/target/
+/installmentecommerce/nbproject/private/
+/installmentecommerce/build/
