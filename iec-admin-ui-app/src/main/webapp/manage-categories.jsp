@@ -11,11 +11,12 @@
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-        <title>Bumble Bee &ndash; Product Categories</title>
+        <title>Bumble Bee &ndash; Categories</title>
 
         <script src="https://kit.fontawesome.com/809f681f36.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="assets/css/admin-view.css"/>
         <link rel="stylesheet" href="assets/css/all.css"/>
+        <link rel="stylesheet" href="assets/css/buttons.css"/>
 
         <!--<script src="assets/js/utils/utils.js"></script>-->
         <!--  <script>if (!isAuth()) window.location = 'login.jsp';</script>-->
@@ -74,12 +75,17 @@
 
         <main>
             <section class="container">
-                <h2 class="section-title">Manage Product Categories</h2>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 585px" download>Download as Excel</a>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                <h2 class="section-title" style="margin-bottom: 30px">Manage Product Categories</h2>
+
+                <div>
+                    <a href="" class="btn btn-create-record">+ Create</a>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 530px" download>Download as Excel</a>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                </div>
+
                 <div class="responsive-table">
                     <table id="category-table">
-                        <thead>
+                        <thead class="table-header">
                             <tr>
                                 <th>Category ID</th>
                                 <th>Category Name</th>
@@ -91,27 +97,28 @@
                             </tr>
                         </thead>
 
-                        <tbody id="category-list"></tbody>
-                        <tr>
-                            <td>PO0001</td>
-                            <td>Clothing</td>
-                            <td>U0001</td>
-                            <td>2023-04-01</td>
-                            <td>U0003</td>
-                            <td>2023-04-01</td>
-                            <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>P00001</td>
-                            <td>Nike</td>
-                            <td>U0001</td>
-                            <td>2023-04-01</td>
-                            <td>U0003</td>
-                            <td>2023-04-01</td>
-                            <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a></td>
-                        </tr>
+                        <tbody id="category-list" class="table-body">
+                            <tr class="table-row">
+                                <td>PO0001</td>
+                                <td>Clothing</td>
+                                <td>U0001</td>
+                                <td>2023-04-01</td>
+                                <td>U0003</td>
+                                <td>2023-04-01</td>
+                                <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <tr>
+                                <td>P00001</td>
+                                <td>Nike</td>
+                                <td>U0001</td>
+                                <td>2023-04-01</td>
+                                <td>U0003</td>
+                                <td>2023-04-01</td>
+                                <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </section>

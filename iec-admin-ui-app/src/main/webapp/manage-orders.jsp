@@ -75,11 +75,15 @@
         <main>
             <section class="container">
                 <h2 class="section-title">Manage Orders</h2>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 440px" download>Download as Excel</a>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+
+                <div style="margin-left: 601px">
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; " download>Download as Excel</a>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                </div>
+                
                 <div class="responsive-table">
                     <table id="order-table">
-                        <thead>
+                        <thead class="table-header">
                             <tr>
                                 <th>Order ID</th>
                                 <th>Order Date</th>
@@ -91,8 +95,8 @@
                             </tr>
                         </thead>
 
-                        <tbody id="order-list">
-                            <tr>
+                        <tbody id="order-list" class="table-body">
+                            <tr class="table-row">
                                 <td>O0001</td>
                                 <td>2022-09-10</td>
                                 <td>14500</td>

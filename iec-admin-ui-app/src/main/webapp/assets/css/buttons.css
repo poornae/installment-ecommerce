@@ -3,27 +3,29 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to c
 Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
 */
 /* 
-    Created on : Apr 8, 2023, 4:22:04 PM
+    Created on : Apr 8, 2023, 5:19:25 PM
     Author     : poornae
 */
 
-.btn-download {
+.btn-create-record {
     color: #fff;
-    background-color: #367588;
+    background-color: #F06543;
     border-color: #367588;
     padding: 4px 8px; 
     font-size: 14px;
+    width: 90px;
+    height: 100px;
 }
 
-.btn-download:focus,
-.btn-download.focus {
-    background-color: #004170;
+.btn-create-record:focus,
+.btn-create-record.focus {
+    background-color: #EC3E14;
     border-color: #004170;
     color: #ffffff !important;
 }
 
-.btn-download:hover {
-    background-color: #004170;
+.btn-create-record:hover {
+    background-color: #EC3E14;
     border-color: #004170;
     color: #ffffff !important;
 }

@@ -16,6 +16,7 @@
         <script src="https://kit.fontawesome.com/809f681f36.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="assets/css/admin-view.css"/>
         <link rel="stylesheet" href="assets/css/all.css"/>
+        <link rel="stylesheet" href="assets/css/buttons.css"/>
 
         <!--<script src="assets/js/utils/utils.js"></script>-->
         <!--  <script>if (!isAuth()) window.location = 'login.jsp';</script>-->
@@ -74,12 +75,17 @@
 
         <main>
             <section class="container">
-                <h2 class="section-title">Manage Inventory</h2>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 420px" download>Download as Excel</a>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                <h2 class="section-title" style="margin-bottom: 30px">Manage Inventory</h2>
+
+                <div>
+                    <a href="" class="btn btn-create-record">+ Create</a>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 530px" download>Download as Excel</a>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                </div>
+
                 <div class="responsive-table">
                     <table id="inventory-table">
-                        <thead>
+                        <thead class="table-header">
                             <tr>
                                 <th>Inventory ID</th>
                                 <th>Name</th>
@@ -94,8 +100,8 @@
                             </tr>
                         </thead>
 
-                        <tbody id="inventory-list">
-                            <tr>
+                        <tbody id="inventory-list" class="table-body">
+                            <tr class="table-row">
                                 <td>I0001</td>
                                 <td>Chocolates</td>
                                 <td>Candy</td>
@@ -117,6 +123,7 @@
                                 <td>Available</td>
                                 <td>500</td>
                                 <td>600</td>
+                                <td>2023-12-01</td>
                                 <td>2023-12-01</td>
                                 <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a>

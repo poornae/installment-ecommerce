@@ -75,11 +75,15 @@
         <main>
             <section class="container">
                 <h2 class="section-title">Manage Transactions</h2>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 400px" download>Download as Excel</a>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+
+                <div>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 600px" download>Download as Excel</a>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                </div>
+
                 <div class="responsive-table">
                     <table id="transaction-table">
-                        <thead>
+                        <thead class="table-header">
                             <tr>
                                 <th>Transaction ID</th>
                                 <th>Transaction Date</th>
@@ -92,9 +96,8 @@
                             </tr>
                         </thead>
 
-                        <tbody id="transaction-list">
-                        <tbody id="transaction-list">
-                            <tr>
+                        <tbody id="transaction-list" class="table-body">
+                            <tr class="table-row">
                                 <td>TR0001</td>
                                 <td>2023-03-01</td>
                                 <td>15000</td>
@@ -117,7 +120,6 @@
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a></td>
                             </tr>
 
-                        </tbody>
                         </tbody>
                     </table>
                 </div>

@@ -16,6 +16,7 @@
         <script src="https://kit.fontawesome.com/809f681f36.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="assets/css/admin-view.css"/>
         <link rel="stylesheet" href="assets/css/all.css"/>
+        <link rel="stylesheet" href="assets/css/buttons.css"/>
 
         <!--<script src="assets/js/utils/utils.js"></script>-->
         <!--  <script>if (!isAuth()) window.location = 'login.jsp';</script>-->
@@ -89,12 +90,17 @@
 
         <main>
             <section class="container">
-                <h2 class="section-title">Manage Products</h2>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 420px" download>Download as Excel</a>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                <h2 class="section-title" style="margin-bottom: 30px">Manage Products</h2>
+
+                <div>
+                    <a href="" class="btn btn-create-record">+ Create</a>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 528px" download>Download as Excel</a>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                </div>
+
                 <div class="responsive-table">
                     <table id="product-table">
-                        <thead>
+                        <thead class="table-header">
                             <tr>
                                 <th>Product ID</th>
                                 <th>Product Image</th>
@@ -114,29 +120,43 @@
                             </tr>
                         </thead>
 
-                        <tbody id="product-list">
-                            <tr>
+                        <tbody id="product-list" class="table-body">
+                            <tr class="table-row">
                                 <td>P0001</td>
-                                <td><img src="assets/img/choco.jpg" alt="logo" class="logo" width="50" height="50"></td>
+                                <td><img src="assets/img/choco.jpg" alt="logo" class="logo" width="50" height="50" style="border-radius: 50%"></td>
                                 <td>Chocolate</td>
                                 <td>Sweet</td>
                                 <td>400</td>
                                 <td>100</td>
                                 <td>300</td>
-                                <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a>
+                                <td>400</td>
+                                <td>100</td>
+                                <td>300</td>
+                                <td>100</td>
+                                <td>300</td>
+                                <td>100</td>
+                                <td>300</td>
+                                <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" ><i class="fa fa-pencil"></i></a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" ><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>P0002</td>
-                                <td><img src="assets/img/shoes.jpg" alt="logo" class="logo" width="50" height="50"></td>
+                                <td><img src="assets/img/shoes.jpg" alt="logo" class="logo" width="50" height="50" style="border-radius: 50%"></td>
                                 <td>Shoes</td>
                                 <td>Original</td>
                                 <td>4000</td>
                                 <td>100</td>
                                 <td>3900</td>
-                                <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a>
+                                <td>400</td>
+                                <td>100</td>
+                                <td>300</td>
+                                <td>100</td>
+                                <td>300</td>
+                                <td>100</td>
+                                <td>300</td>
+                                <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" ><i class="fa fa-pencil"></i></a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" ><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                         </tbody>
@@ -145,6 +165,9 @@
             </section>
         </main>
     </body>
+
+    <script src="~/js/universal/jquery.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <!--<script src="assets/js/script.js"></script>-->
     <!--<script src="assets/js/getUsers.js"></script>-->
 </html>

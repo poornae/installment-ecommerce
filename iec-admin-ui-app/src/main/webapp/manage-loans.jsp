@@ -11,7 +11,7 @@
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-        <title>Bumble Bee &ndash; View Loans</title>
+        <title>Bumble Bee &ndash; Loans</title>
 
         <script src="https://kit.fontawesome.com/809f681f36.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="assets/css/loans.css"/>
@@ -75,10 +75,8 @@
         <main>
             <section class="container">
                 <h2 class="section-title">Manage Loans</h2>
-                <div><a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left:600px" download>Download as Excel</a>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a></div>
-                <br>
-                <div class="toggle-reports">
+                
+                <div class="toggle-reports" style="margin-bottom: 20px">
                     <button class="btn btn-toggled" onclick="toggleTab('loans-all', this)">
                         All
                     </button>
@@ -89,10 +87,15 @@
                         Not Repaid
                     </button>
                 </div>
+                
+                <div>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="height: 20px; padding: 4px 8px; font-size: 14px; margin-left:601px" download>Download as Excel</a>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="height: 20px; padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                </div>
 
                 <div id="loans-all" class="responsive-table">
                     <table>
-                        <thead>
+                        <thead class="table-header">
                             <tr>
                                 <th>Loan ID</th>
                                 <th>Loan Amount</th>
@@ -107,42 +110,42 @@
                             </tr>
                         </thead>
 
-                        <tbody id="records-all"><tbody id="records-unpaid">
-                                <tr>
-                                    <td>L0001</td>
-                                    <td>15000</td>
-                                    <td>3</td>
-                                    <td>5000</td>
-                                    <td>2</td>
-                                    <td>2023-02-01</td>
-                                    <td>2023-05-01</td>
-                                    <td>Pending</td>
-                                    <td>TR0025</td>
-                                    <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>L0002</td>
-                                    <td>15000</td>
-                                    <td>3</td>
-                                    <td>5000</td>
-                                    <td>2</td>
-                                    <td>2023-03-01</td>
-                                    <td>2023-06-01</td>
-                                    <td>Complete</td>
-                                    <td>TR0025</td>
-                                    <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
-                                        &nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a>
-                                    </td>
-                                </tr>
+                        <tbody id="records-all" class="table-body"><tbody id="records-unpaid" class="table-body">
+                            <tr class="table-row">
+                                <td>L0001</td>
+                                <td>15000</td>
+                                <td>3</td>
+                                <td>5000</td>
+                                <td>2</td>
+                                <td>2023-02-01</td>
+                                <td>2023-05-01</td>
+                                <td>Pending</td>
+                                <td>TR0025</td>
+                                <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
+                                    <a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>L0002</td>
+                                <td>15000</td>
+                                <td>3</td>
+                                <td>5000</td>
+                                <td>2</td>
+                                <td>2023-03-01</td>
+                                <td>2023-06-01</td>
+                                <td>Complete</td>
+                                <td>TR0025</td>
+                                <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
+                                    <a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
                         </tbody></tbody>
                     </table>
                 </div>
 
                 <div id="loans-repaid" class="responsive-table">
                     <table>
-                        <thead>
+                        <thead class="table-header">
                             <tr>
                                 <th>Loan ID</th>
                                 <th>Loan Amount</th>
@@ -157,13 +160,13 @@
                             </tr>
                         </thead>
 
-                        <tbody id="records-repaid"></tbody>
+                        <tbody id="records-repaid" class="table-body"></tbody>
                     </table>
                 </div>
 
                 <div id="loans-unpaid" class="responsive-table">
                     <table>
-                        <thead>
+                        <thead class="table-header">
                             <tr>
                                 <th>Loan ID</th>
                                 <th>Loan Amount</th>
@@ -178,35 +181,35 @@
                             </tr>
                         </thead>
 
-                        <tbody id="records-unpaid">
-                                <tr>
-                                    <td>L0001</td>
-                                    <td>15000</td>
-                                    <td>3</td>
-                                    <td>5000</td>
-                                    <td>2</td>
-                                    <td>2023-02-01</td>
-                                    <td>2023-05-01</td>
-                                    <td>Pending</td>
-                                    <td>TR0025</td>
-                                    <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>L0002</td>
-                                    <td>15000</td>
-                                    <td>3</td>
-                                    <td>5000</td>
-                                    <td>2</td>
-                                    <td>2023-03-01</td>
-                                    <td>2023-06-01</td>
-                                    <td>Complete</td>
-                                    <td>TR0025</td>
-                                    <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a>
-                                    </td>
-                                </tr>
+                        <tbody id="records-unpaid" class="table-body">
+                            <tr>
+                                <td>L0001</td>
+                                <td>15000</td>
+                                <td>3</td>
+                                <td>5000</td>
+                                <td>2</td>
+                                <td>2023-02-01</td>
+                                <td>2023-05-01</td>
+                                <td>Pending</td>
+                                <td>TR0025</td>
+                                <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
+                                    <a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>L0002</td>
+                                <td>15000</td>
+                                <td>3</td>
+                                <td>5000</td>
+                                <td>2</td>
+                                <td>2023-03-01</td>
+                                <td>2023-06-01</td>
+                                <td>Complete</td>
+                                <td>TR0025</td>
+                                <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -218,7 +221,7 @@
                     </div>
                     <div class="modal-body">
                         <table>
-                            <thead>
+                            <thead class="table-header">
                                 <tr>
                                     <th>Loan ID</th>
                                     <th>Loan Amount</th>
@@ -231,8 +234,8 @@
                                     <th>Customer ID</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
+                            <tbody class="table-body">
+                                <tr class="table-row">
                                     <td>L0001</td>
                                     <td>15000</td>
                                     <td>3</td>
@@ -243,7 +246,7 @@
                                     <td>Pending</td>
                                     <td>TR0025</td>
                                     <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a>
+                                        <a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
                                 <tr>

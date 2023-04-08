@@ -11,11 +11,12 @@
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-        <title>Bumble Bee &ndash; Product Brands</title>
+        <title>Bumble Bee &ndash; Brands</title>
 
         <script src="https://kit.fontawesome.com/809f681f36.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="assets/css/admin-view.css"/>
         <link rel="stylesheet" href="assets/css/all.css"/>
+        <link rel="stylesheet" href="assets/css/buttons.css"/>
 
         <!--<script src="assets/js/utils/utils.js"></script>-->
         <!--  <script>if (!isAuth()) window.location = 'login.jsp';</script>-->
@@ -74,13 +75,18 @@
 
         <main>
             <section class="container">
-                <div><h2 class="section-title">Manage Product Brands</h2>
-                    <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 585px" download>Download as Excel</a>
-                    <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                <div><h2 class="section-title" style="margin-bottom: 30px">Manage Product Brands</h2>
+
+                    <div>
+                        <a href="" class="btn btn-create-record">+ Create</a>
+                        <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 530px" download>Download as Excel</a>
+                        <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                    </div>
+
                     <div class="col-lg-4 btn-group" role="group" aria-label="Download" style="width: 1500px"></div>
                     <div class="responsive-table">
                         <table id="brand-table">
-                            <thead>
+                            <thead class="table-header">
                                 <tr>
                                     <th>Brand ID</th>
                                     <th>Brand Name</th>
@@ -89,12 +95,11 @@
                                     <th>Updated By</th>
                                     <th>Updated At</th>
                                     <th></th>
-
                                 </tr>
                             </thead>
 
-                            <tbody id="brand-list">
-                                <tr>
+                            <tbody id="brand-list" class="table-body">
+                                <tr class="table-row">
                                     <td>PB0001</td>
                                     <td>Nike</td>
                                     <td>U0001</td>
@@ -102,7 +107,7 @@
                                     <td>U0003</td>
                                     <td>2023-04-01</td>
                                     <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a></td>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete" style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                                 <tr>
                                     <td>PB0002</td>

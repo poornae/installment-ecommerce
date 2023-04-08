@@ -16,6 +16,7 @@
         <script src="https://kit.fontawesome.com/809f681f36.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="assets/css/admin-view.css"/>
         <link rel="stylesheet" href="assets/css/all.css"/>
+        <link rel="stylesheet" href="assets/css/buttons.css"/>
 
         <!--<script src="assets/js/utils/utils.js"></script>-->
         <!--  <script>if (!isAuth()) window.location = 'login.jsp';</script>-->
@@ -74,12 +75,17 @@
 
         <main>
             <section class="container">
-                <h2 class="section-title">Manage Customers</h2>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 420px" download>Download as Excel</a>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                <h2 class="section-title" style="margin-bottom: 30px">Manage Customers</h2>
+              
+                <div>
+                    <a href="" class="btn btn-create-record">+ Create</a>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 528px" download>Download as Excel</a>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                </div> 
+
                 <div class="responsive-table">
                     <table id="customer-table">
-                        <thead>
+                        <thead class="table-header">
                             <tr>
                                 <th>Image</th>
                                 <th>Customer ID</th>
@@ -95,37 +101,37 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody id="customer-list">
-                        <tr>
-                            <th><img src="assets/img/user.jpg" alt="logo" class="logo" style="width: 50px; height: 50px"></th>
-                            <td>CO0001</td>
-                            <td>Tom Fellington</td>
-                            <td>tom@outlook.com</td>
-                            <td>1995-11-01</td>
-                            <td>199523345V</td>
-                            <td>0778999890</td>
-                            <td>Colombo</td>
-                            <td>2023-03-01</td>
-                            <td>2023-02-01</td>
-                            <td>2023-02-01</td>
-                            <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                        <tr>
-                            <th><img src="assets/img/user.jpg" alt="logo" class="logo" style="width: 50px; height: 50px; "></th>
-                            <td>C00002</td>
-                            <td>Peter Parker</td>
-                            <td>peter@outlook.com</td>
-                            <td>1980-11-01</td>
-                            <td>802334555V</td>
-                            <td>0770567890</td>
-                            <td>Colombo</td>
-                            <td>2023-05-01</td>
-                            <td>2023-02-01</td>
-                            <td>2023-03-01</td>
-                            <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a></td>
-                        </tr>
+                        <tbody id="customer-list" class="table-body">
+                            <tr class="table-row">
+                                <th><img src="assets/img/user.jpg" alt="logo" class="logo" style="border-radius: 50%; width: 40px; height: 40px"></th>
+                                <td>CO0001</td>
+                                <td>Tom Fellington</td>
+                                <td>tom@outlook.com</td>
+                                <td>1995-11-01</td>
+                                <td>199523345V</td>
+                                <td>0778999890</td>
+                                <td>Colombo</td>
+                                <td>2023-03-01</td>
+                                <td>2023-02-01</td>
+                                <td>2023-02-01</td>
+                                <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <tr>
+                                <th><img src="assets/img/user.jpg" alt="logo" class="logo" style="border-radius: 50%; width: 40px; height: 40px; "></th>
+                                <td>C00002</td>
+                                <td>Peter Parker</td>
+                                <td>peter@outlook.com</td>
+                                <td>1980-11-01</td>
+                                <td>802334555V</td>
+                                <td>0770567890</td>
+                                <td>Colombo</td>
+                                <td>2023-05-01</td>
+                                <td>2023-02-01</td>
+                                <td>2023-03-01</td>
+                                <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

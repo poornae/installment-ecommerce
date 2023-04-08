@@ -16,6 +16,7 @@
         <script src="https://kit.fontawesome.com/809f681f36.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="assets/css/admin-view.css"/>
         <link rel="stylesheet" href="assets/css/all.css"/>
+        <link rel="stylesheet" href="assets/css/buttons.css"/>
 
         <!--<script src="assets/js/utils/utils.js"></script>-->
         <!--  <script>if (!isAuth()) window.location = 'login.jsp';</script>-->
@@ -74,12 +75,17 @@
 
         <main>
             <section class="container">
-                <h2 class="section-title">Manage Users</h2>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 470px" download>Download as Excel</a>
-                <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                <h2 class="section-title" style="margin-bottom: 30px">Manage Users</h2>
+
+                <div>
+                    <a href="" class="btn btn-create-record">+ Create</a>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "Excel" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px; margin-left: 530px" download>Download as Excel</a>
+                    <a href="@Url.Action("DownloadData", "Message", new { type = "CSV" })" class="btn btn-download" style="padding: 4px 8px; font-size: 14px;" download>Download as CSV</a>
+                </div>
+
                 <div class="responsive-table">
                     <table id="user-table">
-                        <thead>
+                        <thead class="table-header">
                             <tr>
                                 <th>User ID</th>
                                 <th>Email</th>
@@ -94,14 +100,17 @@
                             </tr>
                         </thead>
 
-                        <tbody id="user-list">
-                            <tr>
+                        <tbody id="user-list" class="table-body">
+                            <tr class="table-row">
                                 <td>C0001</td>
                                 <td>lenon@yahoo.com</td>
                                 <td>0786567563</td>
                                 <td>Admin</td>
                                 <td>L1,L2,L3</td>
                                 <td>2023-05-01</td>
+                                <td>U0007</td>
+                                <td>2023-05-01</td>
+                                <td>U0007</td>
                                 <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;" class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a></td>
                             </tr>
@@ -111,7 +120,10 @@
                                 <td>0786569863</td>
                                 <td>User</td>
                                 <td>L1</td>
-                                <td>2023-04-05</td>
+                                <td>2023-05-01</td>
+                                <td>U0007</td>
+                                <td>2023-05-01</td>
+                                <td>U0007</td>
                                 <td><a href="javascript:void(0)" data-toggle="tooltip" title="Edit" style="color:green;"  class="btn btn-effect-ripple btn-xs btn-success"><i class="fa fa-pencil"></i></a>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="tooltip" title="Delete"  style="color:red;" class="btn btn-effect-ripple btn-xs btn-error"><i class="fa fa-trash"></i></a></td>
                             </tr>
