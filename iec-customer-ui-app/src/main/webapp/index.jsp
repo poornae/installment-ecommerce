@@ -15,7 +15,7 @@
   <title>Bumble Bee &mdash; Buy First & Pay Later</title>
 
   <link rel="shortcut icon" type="x-icon" href="assets/img/logo2.svg">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <script src="https://kit.fontawesome.com/809f681f36.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="assets/css/index.css">
   
   <script src="assets/js/utils/utils.js"></script>
@@ -43,7 +43,7 @@
     <section class="hero">
         <h1 class="hero-title">Tired of waiting for payday?<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;We got you covered!</h1>
       <p class="hero-paragraph">
-        Shop now and pay later with Bumble Bee - the online loan provider for purchases up to 15,000 LKR. <br>Enjoy stress-free shopping with our easy repayment options and 3 interest-free installments. <br>Download our mobile app to learn more!
+        Shop now and pay later with Bumble Bee - the online loan provider for purchases up to 15,000 LKR. <br>Enjoy stress-free shopping with our 3 interest-free payment plan option. <br>Download our mobile app to learn more!
       </p>
 
       <div class="hero-callout">
@@ -64,21 +64,21 @@
         <div class="column feature-item">
           <span class="icon-circle">1</span>
           <p class="feature-text">
-            Download the "Bumble Bee" app or visit our website to create an account. It only takes a few minutes!
+            Download the "Bumble Bee" app or visit our website to create an account.
           </p>
         </div>
 
         <div class="column feature-item">
           <span class="icon-circle">2</span>
           <p class="feature-text">
-            Browse your favorite products and add them to your shopping cart. At checkout, select "Bumble Bee" as your payment method.
+            Shop on our mobile app, add to cart the items you wish to purchase, and pay with Bumble Bee at checkout.
           </p>
         </div>
 
         <div class="column feature-item">
           <span class="icon-circle">3</span>
           <p class="feature-text">
-            Choose your preferred payment plan - you can pay in full or split your purchase into 3 interest-free monthly installments.
+            Key in the Bumble Bee credentials followed by your card details and complete the purchase.
           </p>
         </div>
       </div>
@@ -88,23 +88,23 @@
       <h2 class="section-title">Key Features</h2>
       <div class="features">
         <div class="column feature-item">
-          <p class="icon-circle"><i class="fas fa-bell"></i></p>
+          <p class="icon-circle"><i class="fa-solid fa-users"></i></p>
           <p class="feature-text">
-            Users will be able to create an account quickly and easily. This includes providing basic personal information and financial details to qualify for loans.
+            You will be able to create an account quickly and easily with their basic personal information and financial details to qualify for the loan.
           </p>
         </div>
 
         <div class="column feature-item">
-          <p class="icon-circle"><i class="fas fa-sort-down"></i></p>
+          <p class="icon-circle"><i class="fa-solid fa-hand-holding-dollar"></i></p>
           <p class="feature-text">
-            The app will offer flexible payment options, either to pay in full or split payments into 3 installments. Users can select a plan that works for their budget and repayment schedule.
+            The app will offer flexible payment options, either to pay in full or split amount into 3 installments according to your budget.
           </p>
         </div>
 
         <div class="column feature-item">
-          <p class="icon-circle"><i class="fas fa-smile"></i></p>
+          <p class="icon-circle"><i class="fa-solid fa-headset"></i></p>
           <p class="feature-text">
-            The app will offer customer support at all times to help users with any questions or issues they may have. 
+            Our app provides 24/7 customer support to assist you with any queries or concerns you may have while using the app. 
           </p>
         </div>
       </div>
