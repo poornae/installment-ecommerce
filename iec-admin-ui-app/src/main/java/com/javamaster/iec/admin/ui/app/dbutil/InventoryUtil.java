@@ -12,21 +12,20 @@ import com.javamaster.iec.admin.ui.app.model.Inventory;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.registry.infomodel.User;
 
 public class InventoryUtil {
 
     String jdbcURL = "jdbc:mysql://localhost:3306/ecommercedb";
     String jdbcUsername = "root";
-    String jdbcPassword = "Chithmini1996";
+    String jdbcPassword = "f949d8254b17db414e5f9d8b28c1676fef9a1c172f564b0f7cab2a24a14525e3";
 
-    private static final String INSERT_CUSTOMERS_SQL = "INSERT INTO customer" + "  (full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at) VALUES "
-            + " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    private static final String INSERT_INVENTORY_SQL = "INSERT INTO inventory" + " (name, type, available_quantity, availability_status, unit_cost_price, unit_selling_price, created_at, created_by, updated_at, updated_by, product_id) VALUES "
+            + " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
-    private static final String SELECT_CUSTOMER_BY_ID = "select full_name,username,email,date_of_birth,nic_no,profile_image,contact_no,address,created_at,updated_at,last_login_at from customer where customerID =?";
-    private static final String SELECT_ALL_CUSTOMERS = "select * from customer";
-    private static final String DELETE_CUSTOMERS_SQL = "delete from customer where customerID = ?;";
-    private static final String UPDATE_CUSTOMERS_SQL = "update customer set full_name = ?,username= ?, password =?,email =?,date_of_birth = ?,nic_no= ?, profile_image =?,contact_no = ?,address= ?, created_at =?,updated_at= ?, last_login_at =? where customerID = ?;";
+    private static final String SELECT_INVENTORY_BY_ID = "select name, type, available_quantity, availability_status, unit_cost_price, unit_selling_price, created_at, created_by, updated_at, updated_by, product_id from inventory where inventoryID =?";
+    private static final String SELECT_ALL_INVENTORIES = "select * from inventory";
+    private static final String DELETE_INVENTORY_SQL = "delete from inventory where inventoryID = ?;";
+    private static final String UPDATE_INVENTORY_SQL = "update inventory set name = ?, type = ?, available_quantity = ?, availability_status = ?, unit_cost_price = ?, unit_selling_price = ?, created_at =?, created_by =?, updated_at= ?, updated_by=?, product_id = ? where inventoryID = ?;";
 
     protected Connection getConnection() {
         Connection connection = null;
@@ -43,23 +42,23 @@ public class InventoryUtil {
         return connection;
     }
 
-//Create or insert customer
-    public void insertCustomer(Customer customer) throws SQLException {
-        System.out.println(INSERT_CUSTOMERS_SQL);
+//Create or insert inventory
+    public void insertInventory(Inventory inventory) throws SQLException {
+        System.out.println(INSERT_INVENTORY_SQL);
         // try-with-resource statement will auto close the connection.
-        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CUSTOMERS_SQL)) {
-            preparedStatement.setString(1, customer.getFull_name());
-            preparedStatement.setString(2, customer.getUsername());
-            preparedStatement.setString(3, customer.getPassword());
-            preparedStatement.setString(4, customer.getEmail());
-            preparedStatement.setString(5, customer.getDate_of_birth());
-            preparedStatement.setString(6, customer.getNic_no());
-            preparedStatement.setString(7, customer.getProfile_image());
-            preparedStatement.setString(8, customer.getContact_no());
-            preparedStatement.setString(9, customer.getAddress());
-            preparedStatement.setString(10, customer.getCreated_at());
-            preparedStatement.setString(11, customer.getUpdated_at());
-            preparedStatement.setString(12, customer.getLast_login_at());
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INVENTORY_SQL)) {
+            preparedStatement.setString(1, inventory.getName());
+            preparedStatement.setString(2, inventory.getType());
+            preparedStatement.setInt(3, inventory.getAvailable_quantity());
+            preparedStatement.setArray(4, connection.createArrayOf("boolean", inventory.getAvailability_status()));
+            preparedStatement.setFloat(5, inventory.getUnit_cost_price());
+            preparedStatement.setFloat(6, inventory.getUnit_selling_price());
+            preparedStatement.setTimestamp(7, inventory.getCreated_at());
+            preparedStatement.setInt(8, inventory.getCreated_by());
+            preparedStatement.setTimestamp(9, inventory.getUpdated_at());
+            preparedStatement.setInt(10, inventory.getUpdated_by());
+            preparedStatement.setInt(11, inventory.getProduct_id());
+
             System.out.println(preparedStatement);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -67,103 +66,101 @@ public class InventoryUtil {
         }
     }
 
-//Select Customer by id
-    public Customer selectCustomer(int customerID) {
-        Customer customer = null;
+//Select inventory by id
+    public Inventory selectInventory(int inventoryID) {
+        Inventory inventory = null;
         // Step 1: Establishing a Connection
         try (Connection connection = getConnection();
                 // Step 2:Create a statement using connection object
-                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CUSTOMER_BY_ID);) {
-            preparedStatement.setInt(1, customerID);
+                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_INVENTORY_BY_ID);) {
+            preparedStatement.setInt(1, inventoryID);
             System.out.println(preparedStatement);
             // Step 3: Execute the query or update query
             ResultSet rs = preparedStatement.executeQuery();
 
             // Step 4: Process the ResultSet object.
             while (rs.next()) {
-                String full_name = rs.getString("full_name");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                String email = rs.getString("email");
-                String date_of_birth = rs.getString("date_of_birth");
-                String nic_no = rs.getString("nic_no");
-                String profile_image = rs.getString("profile_image");
-                String contact_no = rs.getString("contact_no");
-                String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                String updated_at = rs.getString("updated_at");
-                String last_login_at = rs.getString("last_login_at");
-                customer = new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
+                String name = rs.getString("name");
+                String type = rs.getString("type");
+                int available_quantity = rs.getInt("available_quantity");
+                Array availability_status_array = rs.getArray("availability_status");
+                Boolean[] availability_status = (Boolean[]) availability_status_array.getArray();
+                Float unit_cost_price = rs.getFloat("unit_cost_price");
+                Float unit_selling_price = rs.getFloat("unit_selling_price");
+                Timestamp created_at = rs.getTimestamp("created_at");
+                int created_by = rs.getInt("created_by");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                int updated_by = rs.getInt("updated_by");
+                int product_id = rs.getInt("product_id");
+
+                // Create a new inventory object with the retrieved values
+                inventory = new Inventory(inventoryID, name, type, available_quantity, availability_status, unit_cost_price, unit_selling_price, created_at, created_by, updated_at, updated_by, product_id);
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return customer;
+        return inventory;
     }
 
-//Select all customers
-    public List< Customer> selectAllCustomers() {
-
-        // using try-with-resources to avoid closing resources (boiler plate code)
-        List< Customer> customers = new ArrayList<>();
-        // Step 1: Establishing a Connection
+//Select all inventories
+    public List<Inventory> selectAllInventories() {
+        List<Inventory> inventories = new ArrayList<>();
         try (Connection connection = getConnection();
-                // Step 2:Create a statement using connection object
-                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_CUSTOMERS);) {
+                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_INVENTORIES)) {
             System.out.println(preparedStatement);
-            // Step 3: Execute the query or update query
             ResultSet rs = preparedStatement.executeQuery();
-
-            // Step 4: Process the ResultSet object.
             while (rs.next()) {
-                int customerID = rs.getInt("customerID");
-                String full_name = rs.getString("full_name");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                String email = rs.getString("email");
-                String date_of_birth = rs.getString("date_of_birth");
-                String nic_no = rs.getString("nic_no");
-                String profile_image = rs.getString("profile_image");
-                String contact_no = rs.getString("contact_no");
-                String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                String updated_at = rs.getString("updated_at");
-                String last_login_at = rs.getString("last_login_at");
-                customers.add(new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at));
+                int inventoryID = rs.getInt("inventoryID");
+                String name = rs.getString("name");
+                String type = rs.getString("type");
+                int available_quantity = rs.getInt("available_quantity");
+                Array availability_status_array = rs.getArray("availability_status");
+                Boolean[] availability_status = (Boolean[]) availability_status_array.getArray();
+                Float unit_cost_price = rs.getFloat("unit_cost_price");
+                Float unit_selling_price = rs.getFloat("unit_selling_price");
+                Timestamp created_at = rs.getTimestamp("created_at");
+                int created_by = rs.getInt("created_by");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                int updated_by = rs.getInt("updated_by");
+                int product_id = rs.getInt("product_id");
+
+                // Create a new inventory object with the retrieved values
+                Inventory inventory = new Inventory(inventoryID, name, type, available_quantity, availability_status, unit_cost_price, unit_selling_price, created_at, created_by, updated_at, updated_by, product_id);
+                // Add the inventory to the list of inventories
+                inventories.add(inventory);
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return customers;
+        return inventories;
     }
 
-//delete customer
-    public boolean deleteCustomer(int customerID) throws SQLException {
+//delete inventory
+    public boolean deleteInventory(int inventoryID) throws SQLException {
         boolean rowDeleted;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_CUSTOMERS_SQL);) {
-            statement.setInt(1, customerID);
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_INVENTORY_SQL);) {
+            statement.setInt(1, inventoryID);
             rowDeleted = statement.executeUpdate() > 0;
         }
         return rowDeleted;
     }
 
-//update customer
-    public boolean updateCustomer(Customer customer) throws SQLException {
+//update inventory
+    public boolean updateInventory(Inventory inventory) throws SQLException {
         boolean rowUpdated;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_CUSTOMERS_SQL);) {
-            statement.setString(1, customer.getFull_name());
-            statement.setString(2, customer.getUsername());
-            statement.setString(3, customer.getPassword());
-            statement.setString(4, customer.getEmail());
-            statement.setString(5, customer.getDate_of_birth());
-            statement.setString(6, customer.getNic_no());
-            statement.setString(7, customer.getProfile_image());
-            statement.setString(8, customer.getContact_no());
-            statement.setString(9, customer.getAddress());
-            statement.setString(10, customer.getCreated_at());
-            statement.setString(11, customer.getUpdated_at());
-            statement.setString(12, customer.getLast_login_at());
-            statement.setInt(13, customer.getCustomerID());
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_INVENTORY_SQL);) {
+            statement.setString(1, inventory.getName());
+            statement.setString(2, inventory.getType());
+            statement.setInt(3, inventory.getAvailable_quantity());
+            statement.setArray(4, connection.createArrayOf("boolean", inventory.getAvailability_status()));
+            statement.setFloat(5, inventory.getUnit_cost_price());
+            statement.setFloat(6, inventory.getUnit_selling_price());
+            statement.setTimestamp(7, inventory.getCreated_at());
+            statement.setInt(8, inventory.getCreated_by());
+            statement.setTimestamp(9, inventory.getUpdated_at());
+            statement.setInt(10, inventory.getUpdated_by());
+            statement.setInt(11, inventory.getProduct_id());
+            statement.setInt(12, inventory.getInventoryID());
 
             rowUpdated = statement.executeUpdate() > 0;
         }

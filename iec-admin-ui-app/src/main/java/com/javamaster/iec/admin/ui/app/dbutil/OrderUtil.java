@@ -9,24 +9,20 @@ package com.javamaster.iec.admin.ui.app.dbutil;
  * @author poornae
  */
 import com.javamaster.iec.admin.ui.app.model.Order;
+import com.javamaster.iec.admin.ui.app.model.Transaction;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.registry.infomodel.User;
 
 public class OrderUtil {
 
     String jdbcURL = "jdbc:mysql://localhost:3306/ecommercedb";
     String jdbcUsername = "root";
-    String jdbcPassword = "Chithmini1996";
+    String jdbcPassword = "f949d8254b17db414e5f9d8b28c1676fef9a1c172f564b0f7cab2a24a14525e3";
 
-    private static final String INSERT_CUSTOMERS_SQL = "INSERT INTO customer" + "  (full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at) VALUES "
-            + " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-
-    private static final String SELECT_CUSTOMER_BY_ID = "select full_name,username,email,date_of_birth,nic_no,profile_image,contact_no,address,created_at,updated_at,last_login_at from customer where customerID =?";
-    private static final String SELECT_ALL_CUSTOMERS = "select * from customer";
-    private static final String DELETE_CUSTOMERS_SQL = "delete from customer where customerID = ?;";
-    private static final String UPDATE_CUSTOMERS_SQL = "update customer set full_name = ?,username= ?, password =?,email =?,date_of_birth = ?,nic_no= ?, profile_image =?,contact_no = ?,address= ?, created_at =?,updated_at= ?, last_login_at =? where customerID = ?;";
+    private static final String SELECT_ORDER_BY_ID = "select orderID, order_date, order_total, order_status, updated_at, updated_by, customer_id from orders where orderID =?";
+    private static final String SELECT_ALL_ORDERS = "select * from orders";
+    private static final String UPDATE_ORDER_SQL = "update orders set order_date = ?, order_total = ?, order_status = ?, updated_at = ?, updated_by = ?, customer_id = ? where orderID = ?;";
 
     protected Connection getConnection() {
         Connection connection = null;
@@ -43,127 +39,76 @@ public class OrderUtil {
         return connection;
     }
 
-//Create or insert customer
-    public void insertCustomer(Customer customer) throws SQLException {
-        System.out.println(INSERT_CUSTOMERS_SQL);
-        // try-with-resource statement will auto close the connection.
-        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CUSTOMERS_SQL)) {
-            preparedStatement.setString(1, customer.getFull_name());
-            preparedStatement.setString(2, customer.getUsername());
-            preparedStatement.setString(3, customer.getPassword());
-            preparedStatement.setString(4, customer.getEmail());
-            preparedStatement.setString(5, customer.getDate_of_birth());
-            preparedStatement.setString(6, customer.getNic_no());
-            preparedStatement.setString(7, customer.getProfile_image());
-            preparedStatement.setString(8, customer.getContact_no());
-            preparedStatement.setString(9, customer.getAddress());
-            preparedStatement.setString(10, customer.getCreated_at());
-            preparedStatement.setString(11, customer.getUpdated_at());
-            preparedStatement.setString(12, customer.getLast_login_at());
-            System.out.println(preparedStatement);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            printSQLException(e);
-        }
-    }
-
-//Select Customer by id
-    public Customer selectCustomer(int customerID) {
-        Customer customer = null;
+//Select order by id
+    public Order selectOrder(int orderID) {
+        Order order = null;
         // Step 1: Establishing a Connection
         try (Connection connection = getConnection();
                 // Step 2:Create a statement using connection object
-                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CUSTOMER_BY_ID);) {
-            preparedStatement.setInt(1, customerID);
+                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ORDER_BY_ID);) {
+            preparedStatement.setInt(1, orderID);
             System.out.println(preparedStatement);
             // Step 3: Execute the query or update query
             ResultSet rs = preparedStatement.executeQuery();
 
             // Step 4: Process the ResultSet object.
             while (rs.next()) {
-                String full_name = rs.getString("full_name");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                String email = rs.getString("email");
-                String date_of_birth = rs.getString("date_of_birth");
-                String nic_no = rs.getString("nic_no");
-                String profile_image = rs.getString("profile_image");
-                String contact_no = rs.getString("contact_no");
-                String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                String updated_at = rs.getString("updated_at");
-                String last_login_at = rs.getString("last_login_at");
-                customer = new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
+                Date order_date = rs.getDate("order_date");
+                Float order_total = rs.getFloat("order_total");
+                String order_status = rs.getString("order_status");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                int updated_by = rs.getInt("updated_by");
+                int customer_id = rs.getInt("customer_id");
+                // Create an empty list of transactions
+                List<Transaction> transactions = new ArrayList<>();
+                // Create a new Order object with the retrieved values
+                order = new Order(orderID, order_date, order_total, order_status, updated_at, updated_by, customer_id, transactions);
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return customer;
+        return order;
     }
 
-//Select all customers
-    public List< Customer> selectAllCustomers() {
-
-        // using try-with-resources to avoid closing resources (boiler plate code)
-        List< Customer> customers = new ArrayList<>();
-        // Step 1: Establishing a Connection
+//Select all orders
+    public List<Order> selectAllOrders() {
+        List<Order> orders = new ArrayList<>();
         try (Connection connection = getConnection();
-                // Step 2:Create a statement using connection object
-                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_CUSTOMERS);) {
+                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_ORDERS)) {
             System.out.println(preparedStatement);
-            // Step 3: Execute the query or update query
             ResultSet rs = preparedStatement.executeQuery();
-
-            // Step 4: Process the ResultSet object.
             while (rs.next()) {
-                int customerID = rs.getInt("customerID");
-                String full_name = rs.getString("full_name");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                String email = rs.getString("email");
-                String date_of_birth = rs.getString("date_of_birth");
-                String nic_no = rs.getString("nic_no");
-                String profile_image = rs.getString("profile_image");
-                String contact_no = rs.getString("contact_no");
-                String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                String updated_at = rs.getString("updated_at");
-                String last_login_at = rs.getString("last_login_at");
-                customers.add(new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at));
+                int orderID = rs.getInt("orderID");
+                Date order_date = rs.getDate("order_date");
+                Float order_total = rs.getFloat("order_total");
+                String order_status = rs.getString("order_status");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                int updated_by = rs.getInt("updated_by");
+                int customer_id = rs.getInt("customer_id");
+                // Create an empty list of transactions
+                List<Transaction> transactions = new ArrayList<>();
+                // Create a new Order object with the retrieved values
+                Order order = new Order(orderID, order_date, order_total, order_status, updated_at, updated_by, customer_id, transactions);
+                // Add the order to the list of orders
+                orders.add(order);
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return customers;
+        return orders;
     }
 
-//delete customer
-    public boolean deleteCustomer(int customerID) throws SQLException {
-        boolean rowDeleted;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_CUSTOMERS_SQL);) {
-            statement.setInt(1, customerID);
-            rowDeleted = statement.executeUpdate() > 0;
-        }
-        return rowDeleted;
-    }
-
-//update customer
-    public boolean updateCustomer(Customer customer) throws SQLException {
+//update order
+    public boolean updateOrder(Order order) throws SQLException {
         boolean rowUpdated;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_CUSTOMERS_SQL);) {
-            statement.setString(1, customer.getFull_name());
-            statement.setString(2, customer.getUsername());
-            statement.setString(3, customer.getPassword());
-            statement.setString(4, customer.getEmail());
-            statement.setString(5, customer.getDate_of_birth());
-            statement.setString(6, customer.getNic_no());
-            statement.setString(7, customer.getProfile_image());
-            statement.setString(8, customer.getContact_no());
-            statement.setString(9, customer.getAddress());
-            statement.setString(10, customer.getCreated_at());
-            statement.setString(11, customer.getUpdated_at());
-            statement.setString(12, customer.getLast_login_at());
-            statement.setInt(13, customer.getCustomerID());
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_ORDER_SQL);) {
+            statement.setDate(1, order.getOrder_date());
+            statement.setFloat(2, order.getOrder_total());
+            statement.setString(3, order.getOrder_status());
+            statement.setTimestamp(4, order.getUpdated_at());
+            statement.setInt(5, order.getUpdated_by());
+            statement.setInt(6, order.getCustomer_id());
+            statement.setInt(7, order.getOrderID());
 
             rowUpdated = statement.executeUpdate() > 0;
         }

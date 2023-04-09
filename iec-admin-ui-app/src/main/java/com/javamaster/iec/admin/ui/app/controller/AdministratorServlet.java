@@ -8,6 +8,7 @@ import com.javamaster.iec.admin.ui.app.dbutil.AdministratorUtil;
 import com.javamaster.iec.admin.ui.app.model.Administrator;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,10 +25,10 @@ import javax.servlet.http.HttpServletResponse;
 public class AdministratorServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private CustomerUtil customerUtil;
+    private AdministratorUtil administratorUtil;
 
-    public AdministratorServlet() {
-        this.customerUtil = new customerUtil();
+    public void init() {
+        administratorUtil = new AdministratorUtil();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -39,117 +40,85 @@ public class AdministratorServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getServletPath();
 
-        switch (action) {
-            case "/new":
-                showNewForm(request, response);
-                break;
-            case "/insert":
-            try {
-                insertCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
+        try {
+            switch (action) {
+                case "/new":
+                    showNewForm(request, response);
+                    break;
+                case "/insert":
+                    insertAdministrator(request, response);
+                    break;
+                case "/delete":
+                    deleteAdministrator(request, response);
+                    break;
+                case "/edit":
+                    showEditForm(request, response);
+                    break;
+                case "/update":
+                    updateAdministrator(request, response);
+                    break;
+                default:
+                    listAdministrator(request, response);
+                    break;
             }
-            break;
-            case "/delete":
-                try {
-                deleteCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            case "/edit":
-            try {
-                showEditForm(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            case "/update":
-            try {
-                updateCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            default:
-            try {
-                listCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
+        } catch (SQLException ex) {
+            throw new ServletException(ex);
         }
-
     }
 
-    private void listCustomer(HttpServletRequest request, HttpServletResponse response)
+    private void listAdministrator(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        List< Customer> listCustomer = customerUtil.selectAllCustomers();
-        request.setAttribute("listCustomer", listCustomer);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-list.jsp");
+        List< Administrator> listAdministrator = administratorUtil.selectAllAdministrators();
+        request.setAttribute("listAdministrator", listAdministrator);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("administrator-list.jsp");
         dispatcher.forward(request, response);
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-form.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("administrator-form.jsp");
         dispatcher.forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        Customer existingCustomer = customerUtil.selectCustomer(customerID);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-form.jsp");
-        request.setAttribute("customer", existingCustomer);
+        int adminID = Integer.parseInt(request.getParameter("adminID"));
+        Administrator existingAdministrator = administratorUtil.selectAdministrator(adminID);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("administrator-form.jsp");
+        request.setAttribute("administator", existingAdministrator);
         dispatcher.forward(request, response);
     }
 
-    private void insertCustomer(HttpServletRequest request, HttpServletResponse response)
+    private void insertAdministrator(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        String full_name = request.getParameter("full_name");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String email = request.getParameter("email");
-        String date_of_birth = request.getParameter("date_of_birth");
-        String nic_no = request.getParameter("nic_no");
-        String profile_image = request.getParameter("profile_image");
-        String contact_no = request.getParameter("contact_no");
-        String address = request.getParameter("address");
         String created_at = request.getParameter("created_at");
         String updated_at = request.getParameter("updated_at");
         String last_login_at = request.getParameter("last_login_at");
-        Customer newCustomer = new Customer(full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
-        customerUtil.insertCustomer(newCustomer);
+        Administrator newAdmin = new Administrator(username, password, Timestamp.valueOf(created_at), Timestamp.valueOf(updated_at), Timestamp.valueOf(last_login_at));
+        administratorUtil.insertAdministrator(newAdmin);
         response.sendRedirect("list");
     }
 
-    private void updateCustomer(HttpServletRequest request, HttpServletResponse response)
+    private void updateAdministrator(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        String full_name = request.getParameter("full_name");
+        int adminID = Integer.parseInt(request.getParameter("adminID"));
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String email = request.getParameter("email");
-        String date_of_birth = request.getParameter("date_of_birth");
-        String nic_no = request.getParameter("nic_no");
-        String profile_image = request.getParameter("profile_image");
-        String contact_no = request.getParameter("contact_no");
-        String address = request.getParameter("address");
-        String created_at = request.getParameter("created_at");
-        String updated_at = request.getParameter("updated_at");
-        String last_login_at = request.getParameter("last_login_at");
+        Timestamp created_at = Timestamp.valueOf(request.getParameter("created_at"));
+        Timestamp updated_at = Timestamp.valueOf(request.getParameter("updated_at"));
+        Timestamp last_login_at = Timestamp.valueOf(request.getParameter("last_login_at"));
 
-        Customer book = new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
-        customerUtil.updateCustomer(book);
+        Administrator admin = new Administrator(adminID, username, password, created_at, updated_at, last_login_at);
+        administratorUtil.updateAdministrator(admin);
         response.sendRedirect("list");
     }
 
-    private void deleteCustomer(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        customerUtil.deleteCustomer(customerID);
+    private void deleteAdministrator(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+        int adminID = Integer.parseInt(request.getParameter("adminID"));
+        administratorUtil.deleteAdministrator(adminID);
         response.sendRedirect("list");
-
     }
+
 }

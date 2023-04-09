@@ -7,7 +7,9 @@ package com.javamaster.iec.admin.ui.app.controller;
 import com.javamaster.iec.admin.ui.app.dbutil.TransactionUtil;
 import com.javamaster.iec.admin.ui.app.model.Transaction;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,10 +26,10 @@ import javax.servlet.http.HttpServletResponse;
 public class TransactionServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private CustomerUtil customerUtil;
+    private TransactionUtil transactionUtil;
 
-    public TransactionServlet() {
-        this.customerUtil = new customerUtil();
+    public void init() {
+        transactionUtil = new TransactionUtil();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -39,117 +41,66 @@ public class TransactionServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getServletPath();
 
-        switch (action) {
-            case "/new":
-                showNewForm(request, response);
-                break;
-            case "/insert":
-            try {
-                insertCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
+        try {
+            switch (action) {
+                case "/new":
+                    showNewForm(request, response);
+                    break;
+                case "/edit":
+                    showEditForm(request, response);
+                    break;
+                case "/update":
+                    updateTransaction(request, response);
+                    break;
+                default:
+                    listTransactions(request, response);
+                    break;
             }
-            break;
-            case "/delete":
-                try {
-                deleteCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            case "/edit":
-            try {
-                showEditForm(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            case "/update":
-            try {
-                updateCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            default:
-            try {
-                listCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
+        } catch (SQLException ex) {
+            throw new ServletException(ex);
         }
-
     }
 
-    private void listCustomer(HttpServletRequest request, HttpServletResponse response)
+    private void listTransactions(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        List< Customer> listCustomer = customerUtil.selectAllCustomers();
-        request.setAttribute("listCustomer", listCustomer);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-list.jsp");
+        List<Transaction> transactionList = transactionUtil.selectAllTransactions();
+        request.setAttribute("transactionList", transactionList);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("transaction-list.jsp");
         dispatcher.forward(request, response);
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-form.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("product-form.jsp");
         dispatcher.forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        Customer existingCustomer = customerUtil.selectCustomer(customerID);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-form.jsp");
-        request.setAttribute("customer", existingCustomer);
+        int transactionID = Integer.parseInt(request.getParameter("transactionID"));
+        Transaction existingTransaction = transactionUtil.selectTransaction(transactionID);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("transaction-form.jsp");
+        request.setAttribute("transaction", existingTransaction);
         dispatcher.forward(request, response);
     }
 
-    private void insertCustomer(HttpServletRequest request, HttpServletResponse response)
+    private void updateTransaction(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        String full_name = request.getParameter("full_name");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
-        String date_of_birth = request.getParameter("date_of_birth");
-        String nic_no = request.getParameter("nic_no");
-        String profile_image = request.getParameter("profile_image");
-        String contact_no = request.getParameter("contact_no");
-        String address = request.getParameter("address");
-        String created_at = request.getParameter("created_at");
-        String updated_at = request.getParameter("updated_at");
-        String last_login_at = request.getParameter("last_login_at");
-        Customer newCustomer = new Customer(full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
-        customerUtil.insertCustomer(newCustomer);
+        int transactionID = Integer.parseInt(request.getParameter("transactionID"));
+        Date transaction_date = Date.valueOf(request.getParameter("transaction_date"));
+        Float transaction_amount = Float.parseFloat(request.getParameter("transaction_amount"));
+        String payment_method = request.getParameter("payment_method");
+        String payment_status = request.getParameter("payment_status");
+        String promo_code = request.getParameter("promo_code");
+        Timestamp updated_at = Timestamp.valueOf(request.getParameter("updated_at"));
+        int updated_by = Integer.parseInt(request.getParameter("updated_by"));
+        int customer_id = Integer.parseInt(request.getParameter("customer_id"));
+        int loan_id = Integer.parseInt(request.getParameter("loan_id"));
+        int order_id = Integer.parseInt(request.getParameter("order_id"));
+
+        Transaction transaction = new Transaction(transactionID, transaction_date, transaction_amount, payment_method, payment_status, promo_code, updated_at, updated_by, customer_id, loan_id, order_id);
+        transactionUtil.updateTransaction(transaction);
         response.sendRedirect("list");
     }
 
-    private void updateCustomer(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        String full_name = request.getParameter("full_name");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
-        String date_of_birth = request.getParameter("date_of_birth");
-        String nic_no = request.getParameter("nic_no");
-        String profile_image = request.getParameter("profile_image");
-        String contact_no = request.getParameter("contact_no");
-        String address = request.getParameter("address");
-        String created_at = request.getParameter("created_at");
-        String updated_at = request.getParameter("updated_at");
-        String last_login_at = request.getParameter("last_login_at");
-
-        Customer book = new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
-        customerUtil.updateCustomer(book);
-        response.sendRedirect("list");
-    }
-
-    private void deleteCustomer(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        customerUtil.deleteCustomer(customerID);
-        response.sendRedirect("list");
-
-    }
 }

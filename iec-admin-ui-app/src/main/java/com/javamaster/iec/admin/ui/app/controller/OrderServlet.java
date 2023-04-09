@@ -6,8 +6,11 @@ package com.javamaster.iec.admin.ui.app.controller;
 
 import com.javamaster.iec.admin.ui.app.dbutil.OrderUtil;
 import com.javamaster.iec.admin.ui.app.model.Order;
+import com.javamaster.iec.admin.ui.app.model.Transaction;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,10 +27,10 @@ import javax.servlet.http.HttpServletResponse;
 public class OrderServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private CustomerUtil customerUtil;
+    private OrderUtil orderUtil;
 
-    public OrderServlet() {
-        this.customerUtil = new customerUtil();
+    public void init() {
+        orderUtil = new OrderUtil();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -39,117 +42,64 @@ public class OrderServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getServletPath();
 
-        switch (action) {
-            case "/new":
-                showNewForm(request, response);
-                break;
-            case "/insert":
-            try {
-                insertCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
+        try {
+            switch (action) {
+                case "/new":
+                    showNewForm(request, response);
+                    break;
+                case "/edit":
+                    showEditForm(request, response);
+                    break;
+                case "/update":
+                    updateOrder(request, response);
+                    break;
+                default:
+                    listOrders(request, response);
+                    break;
             }
-            break;
-            case "/delete":
-                try {
-                deleteCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            case "/edit":
-            try {
-                showEditForm(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            case "/update":
-            try {
-                updateCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            default:
-            try {
-                listCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
+        } catch (SQLException ex) {
+            throw new ServletException(ex);
         }
-
     }
 
-    private void listCustomer(HttpServletRequest request, HttpServletResponse response)
+    private void listOrders(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        List< Customer> listCustomer = customerUtil.selectAllCustomers();
-        request.setAttribute("listCustomer", listCustomer);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-list.jsp");
+        List<Order> listOrders = orderUtil.selectAllOrders();
+        request.setAttribute("listOrders", listOrders);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("order-list.jsp");
         dispatcher.forward(request, response);
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-form.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("inventory-form.jsp");
         dispatcher.forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        Customer existingCustomer = customerUtil.selectCustomer(customerID);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-form.jsp");
-        request.setAttribute("customer", existingCustomer);
+        int orderID = Integer.parseInt(request.getParameter("orderID"));
+        Order existingOrder = orderUtil.selectOrder(orderID);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("order-form.jsp");
+        request.setAttribute("order", existingOrder);
         dispatcher.forward(request, response);
     }
 
-    private void insertCustomer(HttpServletRequest request, HttpServletResponse response)
+    private void updateOrder(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        String full_name = request.getParameter("full_name");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
-        String date_of_birth = request.getParameter("date_of_birth");
-        String nic_no = request.getParameter("nic_no");
-        String profile_image = request.getParameter("profile_image");
-        String contact_no = request.getParameter("contact_no");
-        String address = request.getParameter("address");
-        String created_at = request.getParameter("created_at");
-        String updated_at = request.getParameter("updated_at");
-        String last_login_at = request.getParameter("last_login_at");
-        Customer newCustomer = new Customer(full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
-        customerUtil.insertCustomer(newCustomer);
+        int orderID = Integer.parseInt(request.getParameter("orderID"));
+        Date order_date = Date.valueOf(request.getParameter("order_date"));
+        Float order_total = Float.parseFloat(request.getParameter("order_total"));
+        String order_status = request.getParameter("order_status");
+        Timestamp updated_at = Timestamp.valueOf(request.getParameter("updated_at"));
+        int updated_by = Integer.parseInt(request.getParameter("updated_by"));
+        int customer_id = Integer.parseInt(request.getParameter("customer_id"));
+
+        // Assuming that the transactions are being updated separately, we can set the transactions field to null
+        List<Transaction> transactions = null;
+
+        Order order = new Order(orderID, order_date, order_total, order_status, updated_at, updated_by, customer_id, transactions);
+        orderUtil.updateOrder(order);
         response.sendRedirect("list");
-    }
-
-    private void updateCustomer(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        String full_name = request.getParameter("full_name");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
-        String date_of_birth = request.getParameter("date_of_birth");
-        String nic_no = request.getParameter("nic_no");
-        String profile_image = request.getParameter("profile_image");
-        String contact_no = request.getParameter("contact_no");
-        String address = request.getParameter("address");
-        String created_at = request.getParameter("created_at");
-        String updated_at = request.getParameter("updated_at");
-        String last_login_at = request.getParameter("last_login_at");
-
-        Customer book = new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
-        customerUtil.updateCustomer(book);
-        response.sendRedirect("list");
-    }
-
-    private void deleteCustomer(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        customerUtil.deleteCustomer(customerID);
-        response.sendRedirect("list");
-
     }
 }

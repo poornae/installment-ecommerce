@@ -5,9 +5,13 @@
 package com.javamaster.iec.admin.ui.app.controller;
 
 import com.javamaster.iec.admin.ui.app.dbutil.ProductUtil;
+import com.javamaster.iec.admin.ui.app.model.Inventory;
 import com.javamaster.iec.admin.ui.app.model.Product;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,10 +28,10 @@ import javax.servlet.http.HttpServletResponse;
 public class ProductServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private CustomerUtil customerUtil;
+    private ProductUtil productUtil;
 
-    public ProductServlet() {
-        this.customerUtil = new customerUtil();
+    public void init() {
+        productUtil = new ProductUtil();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -39,117 +43,104 @@ public class ProductServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getServletPath();
 
-        switch (action) {
-            case "/new":
-                showNewForm(request, response);
-                break;
-            case "/insert":
-            try {
-                insertCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
+        try {
+            switch (action) {
+                case "/new":
+                    showNewForm(request, response);
+                    break;
+                case "/insert":
+                    insertProduct(request, response);
+                    break;
+                case "/delete":
+                    deleteProduct(request, response);
+                    break;
+                case "/edit":
+                    showEditForm(request, response);
+                    break;
+                case "/update":
+                    updateProduct(request, response);
+                    break;
+                default:
+                    listProducts(request, response);
+                    break;
             }
-            break;
-            case "/delete":
-                try {
-                deleteCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            case "/edit":
-            try {
-                showEditForm(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            case "/update":
-            try {
-                updateCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            default:
-            try {
-                listCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
+        } catch (SQLException ex) {
+            throw new ServletException(ex);
         }
-
     }
 
-    private void listCustomer(HttpServletRequest request, HttpServletResponse response)
+    private void listProducts(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        List< Customer> listCustomer = customerUtil.selectAllCustomers();
-        request.setAttribute("listCustomer", listCustomer);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-list.jsp");
+        List<Product> productList = productUtil.selectAllProducts();
+        request.setAttribute("productList", productList);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("product-list.jsp");
         dispatcher.forward(request, response);
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-form.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("product-form.jsp");
         dispatcher.forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        Customer existingCustomer = customerUtil.selectCustomer(customerID);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-form.jsp");
-        request.setAttribute("customer", existingCustomer);
+        int productID = Integer.parseInt(request.getParameter("productID"));
+        Product existingProduct = productUtil.selectProduct(productID);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("product-form.jsp");
+        request.setAttribute("product", existingProduct);
         dispatcher.forward(request, response);
     }
 
-    private void insertCustomer(HttpServletRequest request, HttpServletResponse response)
+    private void insertProduct(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        String full_name = request.getParameter("full_name");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
-        String date_of_birth = request.getParameter("date_of_birth");
-        String nic_no = request.getParameter("nic_no");
-        String profile_image = request.getParameter("profile_image");
-        String contact_no = request.getParameter("contact_no");
-        String address = request.getParameter("address");
-        String created_at = request.getParameter("created_at");
-        String updated_at = request.getParameter("updated_at");
-        String last_login_at = request.getParameter("last_login_at");
-        Customer newCustomer = new Customer(full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
-        customerUtil.insertCustomer(newCustomer);
+        String name = request.getParameter("name");
+        String description = request.getParameter("description");
+        Float original_price = Float.parseFloat(request.getParameter("original_price"));
+        Float discount = Float.parseFloat(request.getParameter("discount"));
+        Float discounted_price = Float.parseFloat(request.getParameter("discounted_price"));
+        Byte[] image = null; // assuming no image is uploaded for this example
+        Timestamp created_at = Timestamp.valueOf(LocalDateTime.now());
+        int created_by = 1; // assuming the logged-in administrator's ID is 1 for this example
+        Timestamp updated_at = Timestamp.valueOf(LocalDateTime.now());
+        int updated_by = 1; // assuming the logged-in administrator's ID is 1 for this example
+        int category_id = Integer.parseInt(request.getParameter("category_id"));
+        int brand_id = Integer.parseInt(request.getParameter("brand_id"));
+        List<Inventory> inventories = new ArrayList<>(); // assuming no inventories are added for this example
+        Product newProduct = new Product(name, description, image, original_price, discount, discounted_price, created_at, created_by, updated_at, updated_by, category_id, brand_id, inventories);
+        productUtil.insertProduct(newProduct);
         response.sendRedirect("list");
     }
 
-    private void updateCustomer(HttpServletRequest request, HttpServletResponse response)
+    private void updateProduct(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        String full_name = request.getParameter("full_name");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
-        String date_of_birth = request.getParameter("date_of_birth");
-        String nic_no = request.getParameter("nic_no");
-        String profile_image = request.getParameter("profile_image");
-        String contact_no = request.getParameter("contact_no");
-        String address = request.getParameter("address");
-        String created_at = request.getParameter("created_at");
-        String updated_at = request.getParameter("updated_at");
-        String last_login_at = request.getParameter("last_login_at");
+        int productID = Integer.parseInt(request.getParameter("productID"));
+        String name = request.getParameter("name");
+        String description = request.getParameter("description");
+        Byte[] image = null; // change this to your implementation for handling images
+        Float original_price = Float.parseFloat(request.getParameter("original_price"));
+        Float discount = Float.parseFloat(request.getParameter("discount"));
+        Float discounted_price = Float.parseFloat(request.getParameter("discounted_price"));
+        Timestamp created_at = Timestamp.valueOf(request.getParameter("created_at"));
+        int created_by = Integer.parseInt(request.getParameter("created_by"));
+        Timestamp updated_at = Timestamp.valueOf(request.getParameter("updated_at"));
+        int updated_by = Integer.parseInt(request.getParameter("updated_by"));
+        int category_id = Integer.parseInt(request.getParameter("category_id"));
+        int brand_id = Integer.parseInt(request.getParameter("brand_id"));
 
-        Customer book = new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
-        customerUtil.updateCustomer(book);
+        // get the inventories from the request and create a new list
+        List<Inventory> inventories = new ArrayList<>();
+        // implementation for getting inventories from request goes here
+
+        Product product = new Product(productID, name, description, image, original_price, discount, discounted_price, created_at, created_by, updated_at, updated_by, category_id, brand_id, inventories);
+        productUtil.updateProduct(product);
         response.sendRedirect("list");
     }
 
-    private void deleteCustomer(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        customerUtil.deleteCustomer(customerID);
+    private void deleteProduct(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+        int productID = Integer.parseInt(request.getParameter("productID"));
+        productUtil.deleteProduct(productID);
         response.sendRedirect("list");
-
     }
+
 }

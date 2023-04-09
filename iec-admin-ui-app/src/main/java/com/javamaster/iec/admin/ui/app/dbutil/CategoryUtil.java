@@ -9,24 +9,24 @@ package com.javamaster.iec.admin.ui.app.dbutil;
  * @author poornae
  */
 import com.javamaster.iec.admin.ui.app.model.Category;
+import com.javamaster.iec.admin.ui.app.model.Product;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.registry.infomodel.User;
 
 public class CategoryUtil {
 
     String jdbcURL = "jdbc:mysql://localhost:3306/ecommercedb";
     String jdbcUsername = "root";
-    String jdbcPassword = "Chithmini1996";
+    String jdbcPassword = "f949d8254b17db414e5f9d8b28c1676fef9a1c172f564b0f7cab2a24a14525e3";
 
-    private static final String INSERT_CUSTOMERS_SQL = "INSERT INTO customer" + "  (full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at) VALUES "
-            + " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    private static final String INSERT_CATERGORIES_SQL = "INSERT INTO category" + "  (name, created_at, created_by, updated_at, updated_by, products) VALUES "
+            + " (?, ?, ?, ?, ?, ?);";
 
-    private static final String SELECT_CUSTOMER_BY_ID = "select full_name,username,email,date_of_birth,nic_no,profile_image,contact_no,address,created_at,updated_at,last_login_at from customer where customerID =?";
-    private static final String SELECT_ALL_CUSTOMERS = "select * from customer";
-    private static final String DELETE_CUSTOMERS_SQL = "delete from customer where customerID = ?;";
-    private static final String UPDATE_CUSTOMERS_SQL = "update customer set full_name = ?,username= ?, password =?,email =?,date_of_birth = ?,nic_no= ?, profile_image =?,contact_no = ?,address= ?, created_at =?,updated_at= ?, last_login_at =? where customerID = ?;";
+    private static final String SELECT_CATERGORY_BY_ID = "select name, created_at, created_by, updated_at, updated_by, products from category where categoryID =?";
+    private static final String SELECT_ALL_CATERGORIES = "select * from category";
+    private static final String DELETE_CATERGORIES_SQL = "delete from category where categoryID = ?;";
+    private static final String UPDATE_CATERGORIES_SQL = "update category set name = ?, created_at =?, created_by =?, updated_at= ?, updated_by=?, products =? where categoryID = ?;";
 
     protected Connection getConnection() {
         Connection connection = null;
@@ -43,23 +43,17 @@ public class CategoryUtil {
         return connection;
     }
 
-//Create or insert customer
-    public void insertCustomer(Customer customer) throws SQLException {
-        System.out.println(INSERT_CUSTOMERS_SQL);
+//Create or insert Category
+    public void insertCategory(Category category) throws SQLException {
+        System.out.println(INSERT_CATERGORIES_SQL);
         // try-with-resource statement will auto close the connection.
-        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CUSTOMERS_SQL)) {
-            preparedStatement.setString(1, customer.getFull_name());
-            preparedStatement.setString(2, customer.getUsername());
-            preparedStatement.setString(3, customer.getPassword());
-            preparedStatement.setString(4, customer.getEmail());
-            preparedStatement.setString(5, customer.getDate_of_birth());
-            preparedStatement.setString(6, customer.getNic_no());
-            preparedStatement.setString(7, customer.getProfile_image());
-            preparedStatement.setString(8, customer.getContact_no());
-            preparedStatement.setString(9, customer.getAddress());
-            preparedStatement.setString(10, customer.getCreated_at());
-            preparedStatement.setString(11, customer.getUpdated_at());
-            preparedStatement.setString(12, customer.getLast_login_at());
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CATERGORIES_SQL)) {
+            preparedStatement.setString(1, category.getName());
+            preparedStatement.setTimestamp(2, category.getCreated_at());
+            preparedStatement.setInt(3, category.getCreated_by());
+            preparedStatement.setTimestamp(4, category.getUpdated_at());
+            preparedStatement.setInt(5, category.getUpdated_by());
+
             System.out.println(preparedStatement);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -67,103 +61,83 @@ public class CategoryUtil {
         }
     }
 
-//Select Customer by id
-    public Customer selectCustomer(int customerID) {
-        Customer customer = null;
+//Select category by id
+    public Category selectCategory(int categoryID) {
+        Category category = null;
         // Step 1: Establishing a Connection
         try (Connection connection = getConnection();
                 // Step 2:Create a statement using connection object
-                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CUSTOMER_BY_ID);) {
-            preparedStatement.setInt(1, customerID);
+                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CATERGORY_BY_ID);) {
+            preparedStatement.setInt(1, categoryID);
             System.out.println(preparedStatement);
             // Step 3: Execute the query or update query
             ResultSet rs = preparedStatement.executeQuery();
 
             // Step 4: Process the ResultSet object.
             while (rs.next()) {
-                String full_name = rs.getString("full_name");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                String email = rs.getString("email");
-                String date_of_birth = rs.getString("date_of_birth");
-                String nic_no = rs.getString("nic_no");
-                String profile_image = rs.getString("profile_image");
-                String contact_no = rs.getString("contact_no");
-                String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                String updated_at = rs.getString("updated_at");
-                String last_login_at = rs.getString("last_login_at");
-                customer = new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
+                String name = rs.getString("name");
+                Timestamp created_at = rs.getTimestamp("created_at");
+                int created_by = rs.getInt("created_by");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                int updated_by = rs.getInt("updated_by");
+                // Create an empty list of products
+                List<Product> products = new ArrayList<>();
+                // Create a new Category object with the retrieved values
+                category = new Category(categoryID, name, created_at, created_by, updated_at, updated_by, products);   
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return customer;
+        return category;
     }
 
-//Select all customers
-    public List< Customer> selectAllCustomers() {
-
-        // using try-with-resources to avoid closing resources (boiler plate code)
-        List< Customer> customers = new ArrayList<>();
-        // Step 1: Establishing a Connection
+//Select all categories
+    public List<Category> selectAllCategories() {
+        List<Category> categories = new ArrayList<>();
         try (Connection connection = getConnection();
-                // Step 2:Create a statement using connection object
-                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_CUSTOMERS);) {
+                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_CATERGORIES)) {
             System.out.println(preparedStatement);
-            // Step 3: Execute the query or update query
             ResultSet rs = preparedStatement.executeQuery();
-
-            // Step 4: Process the ResultSet object.
             while (rs.next()) {
-                int customerID = rs.getInt("customerID");
-                String full_name = rs.getString("full_name");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                String email = rs.getString("email");
-                String date_of_birth = rs.getString("date_of_birth");
-                String nic_no = rs.getString("nic_no");
-                String profile_image = rs.getString("profile_image");
-                String contact_no = rs.getString("contact_no");
-                String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                String updated_at = rs.getString("updated_at");
-                String last_login_at = rs.getString("last_login_at");
-                customers.add(new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at));
+                int categoryID = rs.getInt("categoryID");
+                String name = rs.getString("name");
+                Timestamp created_at = rs.getTimestamp("created_at");
+                int created_by = rs.getInt("created_by");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                int updated_by = rs.getInt("updated_by");
+                // Create an empty list of products
+                List<Product> products = new ArrayList<>();
+                // Create a new Category object with the retrieved values
+                Category category = new Category(categoryID, name, created_at, created_by, updated_at, updated_by, products);
+                // Add the Category to the list of categories
+                categories.add(category);
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return customers;
+        return categories;
     }
 
-//delete customer
-    public boolean deleteCustomer(int customerID) throws SQLException {
+//delete category
+    public boolean deleteCategory(int categoryID) throws SQLException {
         boolean rowDeleted;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_CUSTOMERS_SQL);) {
-            statement.setInt(1, customerID);
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_CATERGORIES_SQL);) {
+            statement.setInt(1, categoryID);
             rowDeleted = statement.executeUpdate() > 0;
         }
         return rowDeleted;
     }
 
-//update customer
-    public boolean updateCustomer(Customer customer) throws SQLException {
+//update category
+    public boolean updateCategory(Category category) throws SQLException {
         boolean rowUpdated;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_CUSTOMERS_SQL);) {
-            statement.setString(1, customer.getFull_name());
-            statement.setString(2, customer.getUsername());
-            statement.setString(3, customer.getPassword());
-            statement.setString(4, customer.getEmail());
-            statement.setString(5, customer.getDate_of_birth());
-            statement.setString(6, customer.getNic_no());
-            statement.setString(7, customer.getProfile_image());
-            statement.setString(8, customer.getContact_no());
-            statement.setString(9, customer.getAddress());
-            statement.setString(10, customer.getCreated_at());
-            statement.setString(11, customer.getUpdated_at());
-            statement.setString(12, customer.getLast_login_at());
-            statement.setInt(13, customer.getCustomerID());
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_CATERGORIES_SQL);) {
+            statement.setString(1, category.getName());
+            statement.setTimestamp(2, category.getCreated_at());
+            statement.setInt(3, category.getCreated_by());
+            statement.setTimestamp(4, category.getUpdated_at());
+            statement.setInt(5, category.getUpdated_by());
+            statement.setInt(6, category.getCategoryID());
 
             rowUpdated = statement.executeUpdate() > 0;
         }

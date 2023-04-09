@@ -7,7 +7,10 @@ package com.javamaster.iec.admin.ui.app.controller;
 import com.javamaster.iec.admin.ui.app.dbutil.InventoryUtil;
 import com.javamaster.iec.admin.ui.app.model.Inventory;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,10 +27,10 @@ import javax.servlet.http.HttpServletResponse;
 public class InventoryServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private CustomerUtil customerUtil;
+    private InventoryUtil inventoryUtil;
 
-    public InventoryServlet() {
-        this.customerUtil = new customerUtil();
+    public void init() {
+        inventoryUtil = new InventoryUtil();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -39,117 +42,100 @@ public class InventoryServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getServletPath();
 
-        switch (action) {
-            case "/new":
-                showNewForm(request, response);
-                break;
-            case "/insert":
-            try {
-                insertCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
+        try {
+            switch (action) {
+                case "/new":
+                    showNewForm(request, response);
+                    break;
+                case "/insert":
+                    insertInventory(request, response);
+                    break;
+                case "/delete":
+                    deleteInventory(request, response);
+                    break;
+                case "/edit":
+                    showEditForm(request, response);
+                    break;
+                case "/update":
+                    updateInventory(request, response);
+                    break;
+                default:
+                    listInventories(request, response);
+                    break;
             }
-            break;
-            case "/delete":
-                try {
-                deleteCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            case "/edit":
-            try {
-                showEditForm(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            case "/update":
-            try {
-                updateCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
-            default:
-            try {
-                listCustomer(request, response);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            break;
+        } catch (SQLException ex) {
+            throw new ServletException(ex);
         }
-
     }
 
-    private void listCustomer(HttpServletRequest request, HttpServletResponse response)
+    private void listInventories(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        List< Customer> listCustomer = customerUtil.selectAllCustomers();
-        request.setAttribute("listCustomer", listCustomer);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-list.jsp");
+        List<Inventory> listInventories = inventoryUtil.selectAllInventories();
+        request.setAttribute("listInventories", listInventories);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("inventory-list.jsp");
         dispatcher.forward(request, response);
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-form.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("inventory-form.jsp");
         dispatcher.forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        Customer existingCustomer = customerUtil.selectCustomer(customerID);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer-form.jsp");
-        request.setAttribute("customer", existingCustomer);
+        int inventoryID = Integer.parseInt(request.getParameter("inventoryID"));
+        Inventory existingInventory = inventoryUtil.selectInventory(inventoryID);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("inventory-form.jsp");
+        request.setAttribute("inventory", existingInventory);
         dispatcher.forward(request, response);
     }
 
-    private void insertCustomer(HttpServletRequest request, HttpServletResponse response)
+    private void insertInventory(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        String full_name = request.getParameter("full_name");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
-        String date_of_birth = request.getParameter("date_of_birth");
-        String nic_no = request.getParameter("nic_no");
-        String profile_image = request.getParameter("profile_image");
-        String contact_no = request.getParameter("contact_no");
-        String address = request.getParameter("address");
-        String created_at = request.getParameter("created_at");
-        String updated_at = request.getParameter("updated_at");
-        String last_login_at = request.getParameter("last_login_at");
-        Customer newCustomer = new Customer(full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
-        customerUtil.insertCustomer(newCustomer);
+        String name = request.getParameter("name");
+        String type = request.getParameter("type");
+        int available_quantity = Integer.parseInt(request.getParameter("available_quantity"));
+        String[] availability_status_array = request.getParameterValues("availability_status");
+        Boolean[] availability_status = new Boolean[availability_status_array.length];
+        for (int i = 0; i < availability_status_array.length; i++) {
+            availability_status[i] = Boolean.valueOf(availability_status_array[i]);
+        }
+        Float unit_cost_price = Float.parseFloat(request.getParameter("unit_cost_price"));
+        Float unit_selling_price = Float.parseFloat(request.getParameter("unit_selling_price"));
+        Timestamp created_at = Timestamp.valueOf(request.getParameter("created_at"));
+        int created_by = Integer.parseInt(request.getParameter("created_by"));
+        Timestamp updated_at = Timestamp.valueOf(request.getParameter("updated_at"));
+        int updated_by = Integer.parseInt(request.getParameter("updated_by"));
+        int product_id = Integer.parseInt(request.getParameter("product_id"));
+        Inventory newInventory = new Inventory(name, type, available_quantity, availability_status, unit_cost_price, unit_selling_price, created_at, created_by, updated_at, updated_by, product_id);
+        inventoryUtil.insertInventory(newInventory);
         response.sendRedirect("list");
     }
 
-    private void updateCustomer(HttpServletRequest request, HttpServletResponse response)
+    private void updateInventory(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        String full_name = request.getParameter("full_name");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
-        String date_of_birth = request.getParameter("date_of_birth");
-        String nic_no = request.getParameter("nic_no");
-        String profile_image = request.getParameter("profile_image");
-        String contact_no = request.getParameter("contact_no");
-        String address = request.getParameter("address");
-        String created_at = request.getParameter("created_at");
-        String updated_at = request.getParameter("updated_at");
-        String last_login_at = request.getParameter("last_login_at");
+        int inventoryID = Integer.parseInt(request.getParameter("inventoryID"));
+        String name = request.getParameter("name");
+        String type = request.getParameter("type");
+        int available_quantity = Integer.parseInt(request.getParameter("available_quantity"));
+        Boolean[] availability_status = {Boolean.parseBoolean(request.getParameter("availability_status"))};
+        Float unit_cost_price = Float.parseFloat(request.getParameter("unit_cost_price"));
+        Float unit_selling_price = Float.parseFloat(request.getParameter("unit_selling_price"));
+        Timestamp created_at = Timestamp.valueOf(request.getParameter("created_at"));
+        int created_by = Integer.parseInt(request.getParameter("created_by"));
+        Timestamp updated_at = Timestamp.valueOf(request.getParameter("updated_at"));
+        int updated_by = Integer.parseInt(request.getParameter("updated_by"));
+        int product_id = Integer.parseInt(request.getParameter("product_id"));
 
-        Customer book = new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
-        customerUtil.updateCustomer(book);
+        Inventory inventory = new Inventory(inventoryID, name, type, available_quantity, availability_status, unit_cost_price, unit_selling_price, created_at, created_by, updated_at, updated_by, product_id);
+        inventoryUtil.updateInventory(inventory);
         response.sendRedirect("list");
     }
 
-    private void deleteCustomer(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
-        customerUtil.deleteCustomer(customerID);
+    private void deleteInventory(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+        int inventoryID = Integer.parseInt(request.getParameter("inventoryID"));
+        inventoryUtil.deleteInventory(inventoryID);
         response.sendRedirect("list");
-
     }
 }

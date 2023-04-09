@@ -9,10 +9,12 @@ package com.javamaster.iec.admin.ui.app.dbutil;
  * @author poornae
  */
 import com.javamaster.iec.admin.ui.app.model.Customer;
+import com.javamaster.iec.admin.ui.app.model.Loan;
+import com.javamaster.iec.admin.ui.app.model.Order;
+import com.javamaster.iec.admin.ui.app.model.Transaction;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.registry.infomodel.User;
 
 public class CustomerUtil {
 
@@ -23,7 +25,7 @@ public class CustomerUtil {
     private static final String INSERT_CUSTOMERS_SQL = "INSERT INTO customer" + "  (full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at) VALUES "
             + " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
-    private static final String SELECT_CUSTOMER_BY_ID = "select full_name,username,email,date_of_birth,nic_no,profile_image,contact_no,address,created_at,updated_at,last_login_at from customer where customerID =?";
+    private static final String SELECT_CUSTOMER_BY_ID = "select full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at from customer where customerID =?";
     private static final String SELECT_ALL_CUSTOMERS = "select * from customer";
     private static final String DELETE_CUSTOMERS_SQL = "delete from customer where customerID = ?;";
     private static final String UPDATE_CUSTOMERS_SQL = "update customer set full_name = ?,username= ?, password =?,email =?,date_of_birth = ?,nic_no= ?, profile_image =?,contact_no = ?,address= ?, created_at =?,updated_at= ?, last_login_at =? where customerID = ?;";
@@ -52,14 +54,14 @@ public class CustomerUtil {
             preparedStatement.setString(2, customer.getUsername());
             preparedStatement.setString(3, customer.getPassword());
             preparedStatement.setString(4, customer.getEmail());
-            preparedStatement.setString(5, customer.getDate_of_birth());
+            preparedStatement.setDate(5, customer.getDate_of_birth());
             preparedStatement.setString(6, customer.getNic_no());
-            preparedStatement.setString(7, customer.getProfile_image());
-            preparedStatement.setString(8, customer.getContact_no());
+            preparedStatement.setBytes(7, customer.getProfile_image());
+            preparedStatement.setInt(8, customer.getContact_no());
             preparedStatement.setString(9, customer.getAddress());
-            preparedStatement.setString(10, customer.getCreated_at());
-            preparedStatement.setString(11, customer.getUpdated_at());
-            preparedStatement.setString(12, customer.getLast_login_at());
+            preparedStatement.setTimestamp(10, customer.getCreated_at());
+            preparedStatement.setTimestamp(11, customer.getUpdated_at());
+            preparedStatement.setTimestamp(12, customer.getLast_login_at());
             System.out.println(preparedStatement);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -81,19 +83,23 @@ public class CustomerUtil {
 
             // Step 4: Process the ResultSet object.
             while (rs.next()) {
+                int id = rs.getInt("customerID");
                 String full_name = rs.getString("full_name");
                 String username = rs.getString("username");
                 String password = rs.getString("password");
                 String email = rs.getString("email");
-                String date_of_birth = rs.getString("date_of_birth");
+                Date date_of_birth = rs.getDate("date_of_birth");
                 String nic_no = rs.getString("nic_no");
-                String profile_image = rs.getString("profile_image");
-                String contact_no = rs.getString("contact_no");
+                byte[] profile_image = rs.getBytes("profile_image");
+                int contact_no = rs.getInt("contact_no");
                 String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                String updated_at = rs.getString("updated_at");
-                String last_login_at = rs.getString("last_login_at");
-                customer = new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
+                Timestamp created_at = rs.getTimestamp("created_at");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                Timestamp last_login_at = rs.getTimestamp("last_login_at");
+                List<Loan> loans = null; // modify accordingly
+                List<Order> orders = null; // modify accordingly
+                List<Transaction> transactions = null; // modify accordingly
+                customer = new Customer(id, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at, loans, orders, transactions);
             }
         } catch (SQLException e) {
             printSQLException(e);
@@ -102,10 +108,10 @@ public class CustomerUtil {
     }
 
 //Select all customers
-    public List< Customer> selectAllCustomers() {
+    public List<Customer> selectAllCustomers() {
 
         // using try-with-resources to avoid closing resources (boiler plate code)
-        List< Customer> customers = new ArrayList<>();
+        List<Customer> customers = new ArrayList<>();
         // Step 1: Establishing a Connection
         try (Connection connection = getConnection();
                 // Step 2:Create a statement using connection object
@@ -121,15 +127,19 @@ public class CustomerUtil {
                 String username = rs.getString("username");
                 String password = rs.getString("password");
                 String email = rs.getString("email");
-                String date_of_birth = rs.getString("date_of_birth");
+                Date date_of_birth = rs.getDate("date_of_birth");
                 String nic_no = rs.getString("nic_no");
-                String profile_image = rs.getString("profile_image");
-                String contact_no = rs.getString("contact_no");
+                byte[] profile_image = rs.getBytes("profile_image");
+                int contact_no = rs.getInt("contact_no");
                 String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                String updated_at = rs.getString("updated_at");
-                String last_login_at = rs.getString("last_login_at");
-                customers.add(new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at));
+                Timestamp created_at = rs.getTimestamp("created_at");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                Timestamp last_login_at = rs.getTimestamp("last_login_at");
+                List<Loan> loans = new ArrayList<>();
+                List<Order> orders = new ArrayList<>();
+                List<Transaction> transactions = new ArrayList<>();
+                Customer customer = new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at, loans, orders, transactions);
+                customers.add(customer);
             }
         } catch (SQLException e) {
             printSQLException(e);
@@ -155,14 +165,14 @@ public class CustomerUtil {
             statement.setString(2, customer.getUsername());
             statement.setString(3, customer.getPassword());
             statement.setString(4, customer.getEmail());
-            statement.setString(5, customer.getDate_of_birth());
+            statement.setDate(5, customer.getDate_of_birth());
             statement.setString(6, customer.getNic_no());
-            statement.setString(7, customer.getProfile_image());
-            statement.setString(8, customer.getContact_no());
+            statement.setBytes(7, customer.getProfile_image());
+            statement.setInt(8, customer.getContact_no());
             statement.setString(9, customer.getAddress());
-            statement.setString(10, customer.getCreated_at());
-            statement.setString(11, customer.getUpdated_at());
-            statement.setString(12, customer.getLast_login_at());
+            statement.setTimestamp(10, customer.getCreated_at());
+            statement.setTimestamp(11, customer.getUpdated_at());
+            statement.setTimestamp(12, customer.getLast_login_at());
             statement.setInt(13, customer.getCustomerID());
 
             rowUpdated = statement.executeUpdate() > 0;

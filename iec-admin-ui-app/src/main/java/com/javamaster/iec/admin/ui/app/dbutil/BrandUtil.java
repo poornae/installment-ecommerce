@@ -9,7 +9,6 @@ package com.javamaster.iec.admin.ui.app.dbutil;
  * @author poornae
  */
 import com.javamaster.iec.admin.ui.app.model.Brand;
-import com.javamaster.iec.admin.ui.app.model.Customer;
 import com.javamaster.iec.admin.ui.app.model.Product;
 import java.sql.*;
 import java.util.ArrayList;

@@ -9,24 +9,22 @@ package com.javamaster.iec.admin.ui.app.dbutil;
  * @author poornae
  */
 import com.javamaster.iec.admin.ui.app.model.Loan;
+import com.javamaster.iec.admin.ui.app.model.Transaction;
+import com.javamaster.iec.admin.ui.app.model.User;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.registry.infomodel.User;
 
 public class LoanUtil {
 
     String jdbcURL = "jdbc:mysql://localhost:3306/ecommercedb";
     String jdbcUsername = "root";
-    String jdbcPassword = "Chithmini1996";
+    String jdbcPassword = "f949d8254b17db414e5f9d8b28c1676fef9a1c172f564b0f7cab2a24a14525e3";
 
-    private static final String INSERT_CUSTOMERS_SQL = "INSERT INTO customer" + "  (full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at) VALUES "
-            + " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-
-    private static final String SELECT_CUSTOMER_BY_ID = "select full_name,username,email,date_of_birth,nic_no,profile_image,contact_no,address,created_at,updated_at,last_login_at from customer where customerID =?";
-    private static final String SELECT_ALL_CUSTOMERS = "select * from customer";
-    private static final String DELETE_CUSTOMERS_SQL = "delete from customer where customerID = ?;";
-    private static final String UPDATE_CUSTOMERS_SQL = "update customer set full_name = ?,username= ?, password =?,email =?,date_of_birth = ?,nic_no= ?, profile_image =?,contact_no = ?,address= ?, created_at =?,updated_at= ?, last_login_at =? where customerID = ?;";
+    private static final String SELECT_LOAN_BY_ID = "select * from loan where loanID =?";
+    private static final String SELECT_ALL_LOANS = "select * from loan";
+    private static final String SELECT_TRANSACTIONS_BY_LOAN_ID = "select * FROM transaction where loan_id = ?";
+    private static final String UPDATE_LOAN_SQL = "update loan set loan_amount = ?, loan_term = ?, installment_amount = ?, remaining_installment = ?, late_payment = ?, loan_start_date = ?, loan_end_date = ?, loan_status = ?, updated_at =?, updated_by =?, customer_id =? where loanID = ?;";
 
     protected Connection getConnection() {
         Connection connection = null;
@@ -43,127 +41,123 @@ public class LoanUtil {
         return connection;
     }
 
-//Create or insert customer
-    public void insertCustomer(Customer customer) throws SQLException {
-        System.out.println(INSERT_CUSTOMERS_SQL);
-        // try-with-resource statement will auto close the connection.
-        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CUSTOMERS_SQL)) {
-            preparedStatement.setString(1, customer.getFull_name());
-            preparedStatement.setString(2, customer.getUsername());
-            preparedStatement.setString(3, customer.getPassword());
-            preparedStatement.setString(4, customer.getEmail());
-            preparedStatement.setString(5, customer.getDate_of_birth());
-            preparedStatement.setString(6, customer.getNic_no());
-            preparedStatement.setString(7, customer.getProfile_image());
-            preparedStatement.setString(8, customer.getContact_no());
-            preparedStatement.setString(9, customer.getAddress());
-            preparedStatement.setString(10, customer.getCreated_at());
-            preparedStatement.setString(11, customer.getUpdated_at());
-            preparedStatement.setString(12, customer.getLast_login_at());
-            System.out.println(preparedStatement);
-            preparedStatement.executeUpdate();
+    public List<Transaction> selectAllTransactionsByLoanId(int loanId) {
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT * FROM transaction WHERE loan_id = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, loanId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int transactionID = rs.getInt("transactionID");
+                Date transaction_date = rs.getDate("transaction_date");
+                Float transaction_amount = rs.getFloat("transaction_amount");
+                String payment_method = rs.getString("payment_method");
+                String payment_status = rs.getString("payment_status");
+                String promo_code = rs.getString("promo_code");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                int updated_by = rs.getInt("updated_by");
+                int customer_id = rs.getInt("customer_id");
+                int loan_id = rs.getInt("loan_id");
+                int order_id = rs.getInt("order_id");
+                Transaction transaction = new Transaction(transactionID, transaction_date, transaction_amount, payment_method, payment_status, promo_code, updated_at, updated_by, customer_id, loan_id, order_id);
+                transactions.add(transaction);
+            }
         } catch (SQLException e) {
-            printSQLException(e);
+            // handle exception
         }
+        return transactions;
     }
 
-//Select Customer by id
-    public Customer selectCustomer(int customerID) {
-        Customer customer = null;
-        // Step 1: Establishing a Connection
+//Select loan by id
+    public Loan selectLoan(int loanID) {
+        Loan loan = null;
         try (Connection connection = getConnection();
-                // Step 2:Create a statement using connection object
-                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CUSTOMER_BY_ID);) {
-            preparedStatement.setInt(1, customerID);
+                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_LOAN_BY_ID);) {
+            preparedStatement.setInt(1, loanID);
             System.out.println(preparedStatement);
-            // Step 3: Execute the query or update query
             ResultSet rs = preparedStatement.executeQuery();
-
-            // Step 4: Process the ResultSet object.
             while (rs.next()) {
-                String full_name = rs.getString("full_name");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                String email = rs.getString("email");
-                String date_of_birth = rs.getString("date_of_birth");
-                String nic_no = rs.getString("nic_no");
-                String profile_image = rs.getString("profile_image");
-                String contact_no = rs.getString("contact_no");
-                String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                String updated_at = rs.getString("updated_at");
-                String last_login_at = rs.getString("last_login_at");
-                customer = new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
+                Float loan_amount = rs.getFloat("loan_amount");
+                String loan_term = rs.getString("loan_term");
+                Float installment_amount = rs.getFloat("installment_amount");
+                int remaining_installment = rs.getInt("remaining_installment");
+                Float late_payment = rs.getFloat("late_payment");
+                Date loan_start_date = rs.getDate("loan_start_date");
+                Date loan_end_date = rs.getDate("loan_end_date");
+                String loan_status = rs.getString("loan_status");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                int updated_by = rs.getInt("updated_by");
+                int customer_id = rs.getInt("customer_id");
+
+                // Retrieve the transactions for the loan
+                List<Transaction> transactions = new ArrayList<>();
+                PreparedStatement transactionStatement = connection.prepareStatement(SELECT_TRANSACTIONS_BY_LOAN_ID);
+                transactionStatement.setInt(1, loanID);
+                ResultSet transactionRs = transactionStatement.executeQuery();
+                while (transactionRs.next()) {
+                    int transactionID = transactionRs.getInt("transaction_id");
+                    Float amount = transactionRs.getFloat("amount");
+                    Date transaction_date = transactionRs.getDate("transaction_date");
+                }
+
+                // Create a new loan object with the retrieved values and transactions
+                loan = new Loan(loanID, loan_amount, loan_term, installment_amount, remaining_installment, late_payment, loan_start_date, loan_end_date, loan_status, updated_at, updated_by, customer_id, transactions);
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return customer;
+        return loan;
     }
 
-//Select all customers
-    public List< Customer> selectAllCustomers() {
-
-        // using try-with-resources to avoid closing resources (boiler plate code)
-        List< Customer> customers = new ArrayList<>();
-        // Step 1: Establishing a Connection
+//Select all loans
+    public List<Loan> selectAllLoans() {
+        List<Loan> loans = new ArrayList<>();
         try (Connection connection = getConnection();
-                // Step 2:Create a statement using connection object
-                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_CUSTOMERS);) {
-            System.out.println(preparedStatement);
-            // Step 3: Execute the query or update query
+                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_LOANS)) {
             ResultSet rs = preparedStatement.executeQuery();
-
-            // Step 4: Process the ResultSet object.
             while (rs.next()) {
-                int customerID = rs.getInt("customerID");
-                String full_name = rs.getString("full_name");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                String email = rs.getString("email");
-                String date_of_birth = rs.getString("date_of_birth");
-                String nic_no = rs.getString("nic_no");
-                String profile_image = rs.getString("profile_image");
-                String contact_no = rs.getString("contact_no");
-                String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                String updated_at = rs.getString("updated_at");
-                String last_login_at = rs.getString("last_login_at");
-                customers.add(new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at));
+                int loanID = rs.getInt("loanID");
+                Float loan_amount = rs.getFloat("loan_amount");
+                String loan_term = rs.getString("loan_term");
+                Float installment_amount = rs.getFloat("installment_amount");
+                int remaining_installment = rs.getInt("remaining_installment");
+                Float late_payment = rs.getFloat("late_payment");
+                Date loan_start_date = rs.getDate("loan_start_date");
+                Date loan_end_date = rs.getDate("loan_end_date");
+                String loan_status = rs.getString("loan_status");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                int updated_by = rs.getInt("updated_by");
+                int customer_id = rs.getInt("customer_id");
+                List<Transaction> transactions = selectAllTransactionsByLoanId(loanID); // assuming a function to retrieve transactions by loan ID
+
+                // Create a new Loan object with the retrieved values
+                Loan loan = new Loan(loanID, loan_amount, loan_term, installment_amount, remaining_installment, late_payment, loan_start_date, loan_end_date, loan_status, updated_at, updated_by, customer_id, transactions);
+                // Add the loan to the list of loans
+                loans.add(loan);
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return customers;
+        return loans;
     }
 
-//delete customer
-    public boolean deleteCustomer(int customerID) throws SQLException {
-        boolean rowDeleted;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_CUSTOMERS_SQL);) {
-            statement.setInt(1, customerID);
-            rowDeleted = statement.executeUpdate() > 0;
-        }
-        return rowDeleted;
-    }
-
-//update customer
-    public boolean updateCustomer(Customer customer) throws SQLException {
+//update loan
+    public boolean updateLoan(Loan loan) throws SQLException {
         boolean rowUpdated;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_CUSTOMERS_SQL);) {
-            statement.setString(1, customer.getFull_name());
-            statement.setString(2, customer.getUsername());
-            statement.setString(3, customer.getPassword());
-            statement.setString(4, customer.getEmail());
-            statement.setString(5, customer.getDate_of_birth());
-            statement.setString(6, customer.getNic_no());
-            statement.setString(7, customer.getProfile_image());
-            statement.setString(8, customer.getContact_no());
-            statement.setString(9, customer.getAddress());
-            statement.setString(10, customer.getCreated_at());
-            statement.setString(11, customer.getUpdated_at());
-            statement.setString(12, customer.getLast_login_at());
-            statement.setInt(13, customer.getCustomerID());
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_LOAN_SQL);) {
+            statement.setFloat(1, loan.getLoan_amount());
+            statement.setString(2, loan.getLoan_term());
+            statement.setFloat(3, loan.getInstallment_amount());
+            statement.setInt(4, loan.getRemaining_installment());
+            statement.setFloat(5, loan.getLate_payment());
+            statement.setDate(6, loan.getLoan_start_date());
+            statement.setDate(7, loan.getLoan_end_date());
+            statement.setString(8, loan.getLoan_status());
+            statement.setTimestamp(9, loan.getUpdated_at());
+            statement.setInt(10, loan.getUpdated_by());
+            statement.setInt(11, loan.getCustomer_id());
+            statement.setInt(12, loan.getLoanID());
 
             rowUpdated = statement.executeUpdate() > 0;
         }

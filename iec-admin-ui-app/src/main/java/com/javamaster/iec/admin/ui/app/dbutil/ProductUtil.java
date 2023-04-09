@@ -8,25 +8,26 @@ package com.javamaster.iec.admin.ui.app.dbutil;
  *
  * @author poornae
  */
+import com.javamaster.iec.admin.ui.app.model.Inventory;
 import com.javamaster.iec.admin.ui.app.model.Product;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.registry.infomodel.User;
 
 public class ProductUtil {
 
     String jdbcURL = "jdbc:mysql://localhost:3306/ecommercedb";
     String jdbcUsername = "root";
-    String jdbcPassword = "Chithmini1996";
+    String jdbcPassword = "f949d8254b17db414e5f9d8b28c1676fef9a1c172f564b0f7cab2a24a14525e3";
 
-    private static final String INSERT_CUSTOMERS_SQL = "INSERT INTO customer" + "  (full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at) VALUES "
+    private static final String INSERT_PRODUCTS_SQL = "INSERT INTO product"
+            + "  (name, description, image, original_price, discount, discounted_price, created_at, created_by, updated_at, updated_by, category_id, brand_id) VALUES "
             + " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
-    private static final String SELECT_CUSTOMER_BY_ID = "select full_name,username,email,date_of_birth,nic_no,profile_image,contact_no,address,created_at,updated_at,last_login_at from customer where customerID =?";
-    private static final String SELECT_ALL_CUSTOMERS = "select * from customer";
-    private static final String DELETE_CUSTOMERS_SQL = "delete from customer where customerID = ?;";
-    private static final String UPDATE_CUSTOMERS_SQL = "update customer set full_name = ?,username= ?, password =?,email =?,date_of_birth = ?,nic_no= ?, profile_image =?,contact_no = ?,address= ?, created_at =?,updated_at= ?, last_login_at =? where customerID = ?;";
+    private static final String SELECT_PRODUCT_BY_ID = "SELECT * FROM product WHERE productID = ?";
+    private static final String SELECT_ALL_PRODUCTS = "SELECT * FROM product";
+    private static final String DELETE_PRODUCT_SQL = "DELETE FROM product WHERE productID = ?";
+    private static final String UPDATE_PRODUCT_SQL = "UPDATE product SET name = ?, description = ?, image = ?, original_price = ?, discount = ?, discounted_price = ?, created_at = ?, created_by = ?, updated_at = ?, updated_by = ?, category_id = ?, brand_id = ? WHERE productID = ?";
 
     protected Connection getConnection() {
         Connection connection = null;
@@ -43,23 +44,24 @@ public class ProductUtil {
         return connection;
     }
 
-//Create or insert customer
-    public void insertCustomer(Customer customer) throws SQLException {
-        System.out.println(INSERT_CUSTOMERS_SQL);
+//Create or insert product
+    public void insertProduct(Product product) throws SQLException {
+        System.out.println(INSERT_PRODUCTS_SQL);
         // try-with-resource statement will auto close the connection.
-        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CUSTOMERS_SQL)) {
-            preparedStatement.setString(1, customer.getFull_name());
-            preparedStatement.setString(2, customer.getUsername());
-            preparedStatement.setString(3, customer.getPassword());
-            preparedStatement.setString(4, customer.getEmail());
-            preparedStatement.setString(5, customer.getDate_of_birth());
-            preparedStatement.setString(6, customer.getNic_no());
-            preparedStatement.setString(7, customer.getProfile_image());
-            preparedStatement.setString(8, customer.getContact_no());
-            preparedStatement.setString(9, customer.getAddress());
-            preparedStatement.setString(10, customer.getCreated_at());
-            preparedStatement.setString(11, customer.getUpdated_at());
-            preparedStatement.setString(12, customer.getLast_login_at());
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PRODUCTS_SQL)) {
+            preparedStatement.setString(1, product.getName());
+            preparedStatement.setString(2, product.getDescription());
+            preparedStatement.setObject(3, product.getImage());
+            preparedStatement.setFloat(4, product.getOriginal_price());
+            preparedStatement.setFloat(5, product.getDiscount());
+            preparedStatement.setFloat(6, product.getDiscounted_price());
+            preparedStatement.setTimestamp(7, product.getCreated_at());
+            preparedStatement.setInt(8, product.getCreated_by());
+            preparedStatement.setTimestamp(9, product.getUpdated_at());
+            preparedStatement.setInt(10, product.getUpdated_by());
+            preparedStatement.setInt(11, product.getCategory_id());
+            preparedStatement.setInt(12, product.getBrand_id());
+
             System.out.println(preparedStatement);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -67,103 +69,105 @@ public class ProductUtil {
         }
     }
 
-//Select Customer by id
-    public Customer selectCustomer(int customerID) {
-        Customer customer = null;
+//Select product by id
+    public Product selectProduct(int productID) {
+        Product product = null;
         // Step 1: Establishing a Connection
         try (Connection connection = getConnection();
                 // Step 2:Create a statement using connection object
-                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CUSTOMER_BY_ID);) {
-            preparedStatement.setInt(1, customerID);
+                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PRODUCT_BY_ID);) {
+            preparedStatement.setInt(1, productID);
             System.out.println(preparedStatement);
             // Step 3: Execute the query or update query
             ResultSet rs = preparedStatement.executeQuery();
 
             // Step 4: Process the ResultSet object.
             while (rs.next()) {
-                String full_name = rs.getString("full_name");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                String email = rs.getString("email");
-                String date_of_birth = rs.getString("date_of_birth");
-                String nic_no = rs.getString("nic_no");
-                String profile_image = rs.getString("profile_image");
-                String contact_no = rs.getString("contact_no");
-                String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                String updated_at = rs.getString("updated_at");
-                String last_login_at = rs.getString("last_login_at");
-                customer = new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                Byte[] image = (Byte[]) rs.getObject("image");
+                Float original_price = rs.getFloat("original_price");
+                Float discount = rs.getFloat("discount");
+                Float discounted_price = rs.getFloat("discounted_price");
+                Timestamp created_at = rs.getTimestamp("created_at");
+                int created_by = rs.getInt("created_by");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                int updated_by = rs.getInt("updated_by");
+                int category_id = rs.getInt("category_id");
+                int brand_id = rs.getInt("brand_id");
+                // Create an empty list of inventories
+                List<Inventory> inventories = new ArrayList<>();
+                // Create a new Product object with the retrieved values
+                product = new Product(productID, name, description, image, original_price, discount, discounted_price, created_at, created_by, updated_at, updated_by, category_id, brand_id, inventories);
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return customer;
+        return product;
     }
 
-//Select all customers
-    public List< Customer> selectAllCustomers() {
-
-        // using try-with-resources to avoid closing resources (boiler plate code)
-        List< Customer> customers = new ArrayList<>();
-        // Step 1: Establishing a Connection
+//Select all products
+    public List<Product> selectAllProducts() {
+        List<Product> products = new ArrayList<>();
         try (Connection connection = getConnection();
-                // Step 2:Create a statement using connection object
-                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_CUSTOMERS);) {
+                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_PRODUCTS)) {
             System.out.println(preparedStatement);
-            // Step 3: Execute the query or update query
             ResultSet rs = preparedStatement.executeQuery();
-
-            // Step 4: Process the ResultSet object.
             while (rs.next()) {
-                int customerID = rs.getInt("customerID");
-                String full_name = rs.getString("full_name");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                String email = rs.getString("email");
-                String date_of_birth = rs.getString("date_of_birth");
-                String nic_no = rs.getString("nic_no");
-                String profile_image = rs.getString("profile_image");
-                String contact_no = rs.getString("contact_no");
-                String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                String updated_at = rs.getString("updated_at");
-                String last_login_at = rs.getString("last_login_at");
-                customers.add(new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at));
+                int productID = rs.getInt("productID");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                Byte[] image = (Byte[]) rs.getObject("image");
+                Float original_price = rs.getFloat("original_price");
+                Float discount = rs.getFloat("discount");
+                Float discounted_price = rs.getFloat("discounted_price");
+                Timestamp created_at = rs.getTimestamp("created_at");
+                int created_by = rs.getInt("created_by");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                int updated_by = rs.getInt("updated_by");
+                int category_id = rs.getInt("category_id");
+                int brand_id = rs.getInt("brand_id");
+                // Create an empty list of inventories
+                List<Inventory> inventories = new ArrayList<>();
+                // Create a new Product object with the retrieved values
+                Product product = new Product(productID, name, description, image, original_price, discount, discounted_price, created_at, created_by, updated_at, updated_by, category_id, brand_id, inventories);
+                // Add the product to the list of products
+                products.add(product);
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return customers;
+        return products;
     }
 
-//delete customer
-    public boolean deleteCustomer(int customerID) throws SQLException {
-        boolean rowDeleted;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_CUSTOMERS_SQL);) {
-            statement.setInt(1, customerID);
-            rowDeleted = statement.executeUpdate() > 0;
-        }
-        return rowDeleted;
+//delete product
+    public boolean deleteProduct(int productID) throws SQLException {
+    boolean rowDeleted;
+    try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_PRODUCT_SQL)) {
+        statement.setInt(1, productID);
+        rowDeleted = statement.executeUpdate() > 0;
     }
+    return rowDeleted;
+}
 
-//update customer
-    public boolean updateCustomer(Customer customer) throws SQLException {
+
+//update product
+    public boolean updateProduct(Product product) throws SQLException {
         boolean rowUpdated;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_CUSTOMERS_SQL);) {
-            statement.setString(1, customer.getFull_name());
-            statement.setString(2, customer.getUsername());
-            statement.setString(3, customer.getPassword());
-            statement.setString(4, customer.getEmail());
-            statement.setString(5, customer.getDate_of_birth());
-            statement.setString(6, customer.getNic_no());
-            statement.setString(7, customer.getProfile_image());
-            statement.setString(8, customer.getContact_no());
-            statement.setString(9, customer.getAddress());
-            statement.setString(10, customer.getCreated_at());
-            statement.setString(11, customer.getUpdated_at());
-            statement.setString(12, customer.getLast_login_at());
-            statement.setInt(13, customer.getCustomerID());
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_PRODUCT_SQL);) {
+            statement.setString(1, product.getName());
+            statement.setString(2, product.getDescription());
+            statement.setObject(3, product.getImage());
+            statement.setFloat(4, product.getOriginal_price());
+            statement.setFloat(5, product.getDiscount());
+            statement.setFloat(6, product.getDiscounted_price());
+            statement.setTimestamp(7, product.getCreated_at());
+            statement.setInt(8, product.getCreated_by());
+            statement.setTimestamp(9, product.getUpdated_at());
+            statement.setInt(10, product.getUpdated_by());
+            statement.setInt(11, product.getCategory_id());
+            statement.setInt(12, product.getBrand_id());
+            statement.setInt(13, product.getProductID());
 
             rowUpdated = statement.executeUpdate() > 0;
         }
