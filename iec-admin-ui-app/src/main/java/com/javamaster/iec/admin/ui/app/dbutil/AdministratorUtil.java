@@ -18,15 +18,15 @@ public class AdministratorUtil {
 
     String jdbcURL = "jdbc:mysql://localhost:3306/ecommercedb";
     String jdbcUsername = "root";
-    String jdbcPassword = "Chithmini1996";
+    String jdbcPassword = "f949d8254b17db414e5f9d8b28c1676fef9a1c172f564b0f7cab2a24a14525e3";
 
-    private static final String INSERT_CUSTOMERS_SQL = "INSERT INTO customer" + "  (full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at) VALUES "
-            + " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    private static final String INSERT_ADMINISTRATORS_SQL = "INSERT INTO administrator" + "  (username, password, created_at, updated_at, last_login_at) VALUES "
+            + " (?, ?, ?, ?, ?);";
 
-    private static final String SELECT_CUSTOMER_BY_ID = "select full_name,username,email,date_of_birth,nic_no,profile_image,contact_no,address,created_at,updated_at,last_login_at from customer where customerID =?";
-    private static final String SELECT_ALL_CUSTOMERS = "select * from customer";
-    private static final String DELETE_CUSTOMERS_SQL = "delete from customer where customerID = ?;";
-    private static final String UPDATE_CUSTOMERS_SQL = "update customer set full_name = ?,username= ?, password =?,email =?,date_of_birth = ?,nic_no= ?, profile_image =?,contact_no = ?,address= ?, created_at =?,updated_at= ?, last_login_at =? where customerID = ?;";
+    private static final String SELECT_ADMINISTRATOR_BY_ID = "select username, password, created_at, updated_at, last_login_at from administrator where adminID =?";
+    private static final String SELECT_ALL_ADMINISTRATORS = "select * from administrator";
+    private static final String DELETE_ADMINISTRATORS_SQL = "delete from administrator where adminID = ?;";
+    private static final String UPDATE_ADMINISTRATORS_SQL = "update administrator set username = ?,password= ?, created_at =?,updated_at =?,last_login_at = ? where adminID = ?;";
 
     protected Connection getConnection() {
         Connection connection = null;
@@ -43,23 +43,17 @@ public class AdministratorUtil {
         return connection;
     }
 
-//Create or insert customer
-    public void insertCustomer(Customer customer) throws SQLException {
-        System.out.println(INSERT_CUSTOMERS_SQL);
+//Create or insert admin
+    public void insertAdministrator(Administrator administrator) throws SQLException {
+        System.out.println(INSERT_ADMINISTRATORS_SQL);
         // try-with-resource statement will auto close the connection.
-        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CUSTOMERS_SQL)) {
-            preparedStatement.setString(1, customer.getFull_name());
-            preparedStatement.setString(2, customer.getUsername());
-            preparedStatement.setString(3, customer.getPassword());
-            preparedStatement.setString(4, customer.getEmail());
-            preparedStatement.setString(5, customer.getDate_of_birth());
-            preparedStatement.setString(6, customer.getNic_no());
-            preparedStatement.setString(7, customer.getProfile_image());
-            preparedStatement.setString(8, customer.getContact_no());
-            preparedStatement.setString(9, customer.getAddress());
-            preparedStatement.setString(10, customer.getCreated_at());
-            preparedStatement.setString(11, customer.getUpdated_at());
-            preparedStatement.setString(12, customer.getLast_login_at());
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ADMINISTRATORS_SQL)) {
+            preparedStatement.setString(1, administrator.getUsername());
+            preparedStatement.setString(2, administrator.getPassword());
+            preparedStatement.setTimestamp(3, administrator.getCreated_at());
+            preparedStatement.setTimestamp(4, administrator.getUpdated_at());
+            preparedStatement.setTimestamp(5, administrator.getLast_login_at());
+
             System.out.println(preparedStatement);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -67,103 +61,82 @@ public class AdministratorUtil {
         }
     }
 
-//Select Customer by id
-    public Customer selectCustomer(int customerID) {
-        Customer customer = null;
+//Select admin by id
+    public Administrator selectAdministrator(int adminID) {
+        Administrator administrator = null;
         // Step 1: Establishing a Connection
         try (Connection connection = getConnection();
                 // Step 2:Create a statement using connection object
-                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CUSTOMER_BY_ID);) {
-            preparedStatement.setInt(1, customerID);
+                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ADMINISTRATOR_BY_ID);) {
+            preparedStatement.setInt(1, adminID);
             System.out.println(preparedStatement);
             // Step 3: Execute the query or update query
             ResultSet rs = preparedStatement.executeQuery();
 
             // Step 4: Process the ResultSet object.
             while (rs.next()) {
-                String full_name = rs.getString("full_name");
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-                String email = rs.getString("email");
-                String date_of_birth = rs.getString("date_of_birth");
-                String nic_no = rs.getString("nic_no");
-                String profile_image = rs.getString("profile_image");
-                String contact_no = rs.getString("contact_no");
-                String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                String updated_at = rs.getString("updated_at");
-                String last_login_at = rs.getString("last_login_at");
-                customer = new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at);
+                Timestamp created_at = rs.getTimestamp("created_at");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                Timestamp last_login_at = rs.getTimestamp("last_login_at");
+
+                administrator = new Administrator(adminID, username, password, created_at, updated_at, last_login_at);
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return customer;
+        return administrator;
     }
 
-//Select all customers
-    public List< Customer> selectAllCustomers() {
+//Select all admins
+    public List< Administrator> selectAllAdministrators() {
 
         // using try-with-resources to avoid closing resources (boiler plate code)
-        List< Customer> customers = new ArrayList<>();
+        List< Administrator> administrators = new ArrayList<>();
         // Step 1: Establishing a Connection
         try (Connection connection = getConnection();
                 // Step 2:Create a statement using connection object
-                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_CUSTOMERS);) {
+                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_ADMINISTRATORS);) {
             System.out.println(preparedStatement);
             // Step 3: Execute the query or update query
             ResultSet rs = preparedStatement.executeQuery();
 
             // Step 4: Process the ResultSet object.
             while (rs.next()) {
-                int customerID = rs.getInt("customerID");
-                String full_name = rs.getString("full_name");
+                int adminID = rs.getInt("adminID");
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-                String email = rs.getString("email");
-                String date_of_birth = rs.getString("date_of_birth");
-                String nic_no = rs.getString("nic_no");
-                String profile_image = rs.getString("profile_image");
-                String contact_no = rs.getString("contact_no");
-                String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                String updated_at = rs.getString("updated_at");
-                String last_login_at = rs.getString("last_login_at");
-                customers.add(new Customer(customerID, full_name, username, password, email, date_of_birth, nic_no, profile_image, contact_no, address, created_at, updated_at, last_login_at));
+                Timestamp created_at = rs.getTimestamp("created_at");
+                Timestamp updated_at = rs.getTimestamp("updated_at");
+                Timestamp last_login_at = rs.getTimestamp("last_login_at");
+                administrators.add(new Administrator(adminID, username, password, created_at, updated_at, last_login_at));
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return customers;
+        return administrators;
     }
 
-//delete customer
-    public boolean deleteCustomer(int customerID) throws SQLException {
+//delete admin
+    public boolean deleteAdministrator(int adminID) throws SQLException {
         boolean rowDeleted;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_CUSTOMERS_SQL);) {
-            statement.setInt(1, customerID);
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_ADMINISTRATORS_SQL);) {
+            statement.setInt(1, adminID);
             rowDeleted = statement.executeUpdate() > 0;
         }
         return rowDeleted;
     }
 
-//update customer
-    public boolean updateCustomer(Customer customer) throws SQLException {
+//update admin
+    public boolean updateAdministrator(Administrator administrator) throws SQLException {
         boolean rowUpdated;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_CUSTOMERS_SQL);) {
-            statement.setString(1, customer.getFull_name());
-            statement.setString(2, customer.getUsername());
-            statement.setString(3, customer.getPassword());
-            statement.setString(4, customer.getEmail());
-            statement.setString(5, customer.getDate_of_birth());
-            statement.setString(6, customer.getNic_no());
-            statement.setString(7, customer.getProfile_image());
-            statement.setString(8, customer.getContact_no());
-            statement.setString(9, customer.getAddress());
-            statement.setString(10, customer.getCreated_at());
-            statement.setString(11, customer.getUpdated_at());
-            statement.setString(12, customer.getLast_login_at());
-            statement.setInt(13, customer.getCustomerID());
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_ADMINISTRATORS_SQL);) {
+            statement.setString(1, administrator.getUsername());
+            statement.setString(2, administrator.getPassword());
+            statement.setTimestamp(3, administrator.getCreated_at());
+            statement.setTimestamp(4, administrator.getUpdated_at());
+            statement.setTimestamp(5, administrator.getLast_login_at());
 
             rowUpdated = statement.executeUpdate() > 0;
         }
