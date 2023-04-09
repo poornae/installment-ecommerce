@@ -1,0 +1,29 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Apr 8, 2023, 4:22:04 PM
+    Author     : poornae
+*/
+
+.btn-download {
+    color: #fff;
+    background-color: #367588;
+    border-color: #367588;
+    padding: 4px 8px; 
+    font-size: 14px;
+}
+
+.btn-download:focus,
+.btn-download.focus {
+    background-color: #004170;
+    border-color: #004170;
+    color: #ffffff !important;
+}
+
+.btn-download:hover {
+    background-color: #004170;
+    border-color: #004170;
+    color: #ffffff !important;
+}

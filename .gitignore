@@ -15,3 +15,6 @@
 /iec-soap-client/bin/target/
 /installmentecommerce/nbproject/private/
 /installmentecommerce/build/
+/com.javamaster_iec-admin-ui-app_war_1.0-SNAPSHOT/target/
+/iec-administrator-ui-app/bin/target/
+/iec-administrator-ui-app/target/
